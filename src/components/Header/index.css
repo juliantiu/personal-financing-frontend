@@ -1,0 +1,8 @@
+.MuiAppBar-colorPrimary {
+  color: #fff;
+  background-color: #707070 !important;
+}
+
+img {
+  max-height: 80px;
+}

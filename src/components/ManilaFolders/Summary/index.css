@@ -1,0 +1,14 @@
+.bubble {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto !important;
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  background-color: #78ab78;
+}
+
+h4, h5 {
+  font-family: 'Allerta Stencil', sans-serif;
+}

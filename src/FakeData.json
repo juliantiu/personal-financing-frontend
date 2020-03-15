@@ -1,0 +1,265 @@
+[
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-1-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-1-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-1-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-2-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-2-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-2-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-3-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-3-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-3-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-4-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-4-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-4-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-5-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-5-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-5-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-6-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-6-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-6-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-7-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-7-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-7-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-8-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-8-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-8-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-9-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-9-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-9-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-10-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-10-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-10-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-11-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-11-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-11-2"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "amount": 32.11,
+    "description": "This is a test description",
+    "date": "2020-12-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "amount": 11.53,
+    "description": "This is a test description",
+    "date": "2020-12-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "amount": 11.27,
+    "description": "This is a test description",
+    "date": "2020-12-2"
+  }
+]

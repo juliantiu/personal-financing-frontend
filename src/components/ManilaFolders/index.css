@@ -1,0 +1,40 @@
+.folder {
+  padding: 60px 0px; 
+  background-color: #fff7dc;
+}
+
+.page {
+  padding: 20px 0px;
+  background-color: #fff;
+}
+
+.nav {
+  margin-top: 20px;
+}
+
+.nav-item.nav-link {
+  background-color: #fff3c8;
+  border-color: #dee2e6 !important;
+  color: #323232;
+  font-family: 'Permanent Marker', cursive;
+}
+
+.nav-item.nav-link.active {
+  background-color: #fff7dc !important;
+  border-color: #dee2e6 !important;
+  border-bottom: none;
+}
+
+.page-section {
+  padding: 0 30px;
+  margin-bottom: 50px;
+}
+
+.page-heading {
+  margin: 10px 0px;
+}
+
+.page-heading-title {
+  /* font-family: 'Permanent Marker', cursive; */
+  font-family: 'Allerta Stencil', sans-serif;
+}

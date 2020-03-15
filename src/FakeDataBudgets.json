@@ -1,0 +1,212 @@
+[
+  
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-2-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-2-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-2-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-3-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-3-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-3-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-4-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-4-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-4-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-5-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-5-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-5-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-6-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-6-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-6-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-7-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-7-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-7-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-8-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-8-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-8-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-9-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-9-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-9-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-10-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-10-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-10-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-11-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-11-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-11-1"
+  },
+
+  {
+    "category": "Food",
+    "subcategory": "Grocery",
+    "allotted": 180,
+    "date": "2020-12-1"
+  },
+  {
+    "category": "Food",
+    "subcategory": "Restaurant",
+    "allotted": 50,
+    "date": "2020-12-1"
+  },
+  {
+    "category": "Transportation",
+    "subcategory": "Gas",
+    "allotted": 80,
+    "date": "2020-12-1"
+  }
+]
