@@ -16,10 +16,10 @@ function calculateCategoriesTotal(monthBudgetData) {
   );
 }
 
-function calculateSpent(monthTransactionData) {
-  return monthTransactionData.reduce(
+function calculateSpent(transactions) {
+  return transactions.reduce(
     (accumulator, currentValue) => {
-      return accumulator += currentValue.amount;
+      return accumulator += parseInt(currentValue.cost);
     }, 0
   );
 }
@@ -28,7 +28,7 @@ export default function Summary(props) {
 
   const balance = getBalance();
   const categoriesTotals = calculateCategoriesTotal(props.monthBudgetData);
-  const spent = calculateSpent(props.monthTransactionData);
+  const spent = calculateSpent(props.transactions);
   const remaining = balance - spent;
   let categoriesTotalColor;
   let remainingColor;

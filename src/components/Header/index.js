@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import app from '../../firebase';
 
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -7,6 +8,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import './index.css';
 import logo from '../../assets/img/handle.png';
+
+function logout() {
+  app.auth().signOut()
+}
 
 export default function TemporaryDrawer() {
   const [drawerState, setDrawerState] = useState({
@@ -27,7 +32,7 @@ export default function TemporaryDrawer() {
       onClick={toggleDrawer(side, false)}
       onKeyDown={toggleDrawer(side, false)}
     >
-      Hello World
+      <button onClick={logout}>logout</button>
     </div>
   );
 
