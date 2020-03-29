@@ -27,7 +27,7 @@ function calculateSpent(transactions) {
 export default function Summary(props) {
 
   const balance = getBalance();
-  const categoriesTotals = calculateCategoriesTotal(props.monthBudgetData);
+  const categoriesTotals = calculateCategoriesTotal(props.budgets);
   const spent = calculateSpent(props.transactions);
   const remaining = balance - spent;
   let categoriesTotalColor;

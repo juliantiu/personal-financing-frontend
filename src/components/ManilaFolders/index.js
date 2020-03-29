@@ -12,8 +12,6 @@ import Summary from './Summary';
 import TransactionHistory from './TransactionHistory';
 import Budgets from './Budgets';
 
-import FakeDataBudgets from '../../FakeDataBudgets.json'
-
 import './index.css';
 
 const months = [
@@ -31,45 +29,40 @@ const months = [
   'December'
 ];
 
-function filterBudgetBasedOnMonth(monthIndex) {
-  return FakeDataBudgets.filter(
-    budget => {
-      return new Date(budget.date).getMonth() === monthIndex;
-    }
-  );
+function fetchRequest(url, setMethod) {
+  fetch(url, {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials:'same-origin',
+  })
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    setMethod(data);
+  })
+  .catch(error => {
+    alert(error);
+  });
 }
 
-const initTransactionsState = [];
-const initBudgetsState = [];
-const apiCommand = process.env.REACT_APP_API_GETTRANSACTIONS;
+const initDataState = []
+const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
 const year = 2020;
 
 export default function ManilaFolders() {
-  const [monthIndex, setMonthIndex] = useState(0);
-  const [transactions, setTransactions] = useState(initTransactionsState);
-  const [budgets, setBudgets] = useState(initBudgetsState);
   const { currentUser } = useContext(AuthContext);
-  const url = `http://localhost:5000/${apiCommand}?year=${year}&month=${monthIndex+1}&uid=${currentUser.uid}`
+  const [monthIndex, setMonthIndex] = useState(0);
+  const [transactions, setTransactions] = useState(initDataState);
+  const [budgets, setBudgets] = useState(initDataState);
+  const [categories, setCategories] = useState(initDataState);
+  const categoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${monthIndex}&uid=${currentUser.uid}`;
 
   useEffect(
     () => {
-      fetch(url, {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-          credentials:'same-origin',
-        }
-      )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setTransactions(data);
-      })
-      .catch(error => {
-        alert(error);
-      });
-    }, [monthIndex]
+      fetchRequest(categoriesUrl, setCategories);
+    }, [monthIndex, setCategories]
   );
 
   const handleChange = (newMonthIndex) => {
@@ -97,9 +90,30 @@ export default function ManilaFolders() {
             </Row>
             <Row className="justify-content-center folder">
               <Col className="page" xs={10}>
-                <Summary transactions={transactions} monthBudgetData={filterBudgetBasedOnMonth(monthIndex)}/>
-                <TransactionHistory transactions={transactions}/>
-                <Budgets transactions={transactions} month={monthIndex} />
+                {/* <Summary 
+                  transactions={transactions} 
+                  budgets={budgets}
+                /> */}
+                <hr />
+                <TransactionHistory 
+                  month={monthIndex} 
+                  year={2020}                  
+                  transactions={transactions} 
+                  categories={categories} 
+                  budgets={budgets}
+                  setTransactions={setTransactions}
+                  currentUser={currentUser}
+                />
+                <hr />
+                <Budgets 
+                  //transactions={transactions} 
+                  month={monthIndex} 
+                  year={2020}
+                  budgets={budgets}
+                  setBudgets={setBudgets}
+                  categories={categories}
+                  currentuser={currentUser}
+                />
               </Col>
             </Row>
           </Col>
