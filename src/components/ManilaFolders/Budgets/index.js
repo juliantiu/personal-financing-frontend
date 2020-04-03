@@ -58,15 +58,15 @@ function getBudgets(setBudgets, categories) {
   });
 }
 
-function detailPanel(rowData) {
-  return <DetailPanel rowData={rowData}/>
+function detailPanel(rowData, transactions) {
+  return <DetailPanel rowData={rowData} transactions={transactions} />
 }
 
 function renderAmount(rowData) {
   return `$${rowData.allotment}`;
 }
 
-function editable(rowData, currentUser, setBudgets, categories) {
+function editable(rowData, setBudgets, categories) {
   return {
     onRowAdd: newData => new Promise((resolve, reject) => {
       fetch((newSubcategoryUrl), {
@@ -119,7 +119,7 @@ function editable(rowData, currentUser, setBudgets, categories) {
         resolve(data);
       })
       .catch(error => {
-        alert('Failed to delete subcategory');
+        alert('Failed to update subcategory');
         reject(error);
       });
     }),
@@ -148,20 +148,20 @@ function editable(rowData, currentUser, setBudgets, categories) {
 /************************************************************************* MAIN */
 
 export default function Budgets(props) {
-  const { currentUser } = useContext(AuthContext);
+  const { transactions, month, year, setBudgets, categories } = props;
   const categoryIds_to_names = new Map();
-  for (const category in props.categories) {
-    categoryIds_to_names.set(props.categories[category].id, props.categories[category].category_name);
+  for (const category in categories) {
+    categoryIds_to_names.set(categories[category].id, categories[category].category_name);
   }
 
-  const category_ids = props.categories.map(elements => elements.id);
-  const categories = JSON.stringify(category_ids);
+  const category_ids = categories.map(elements => elements.id);
+  const stringifiedCategories = JSON.stringify(category_ids);
   
   useEffect(
     () => {
-      getBudgets(props.setBudgets, categories);
+      getBudgets(props.setBudgets, stringifiedCategories);
     },
-    [props.setBudgets, categories]
+    [setBudgets, stringifiedCategories]
    );
 
   return (
@@ -179,8 +179,8 @@ export default function Budgets(props) {
                     data={budgetTable.subcategories}
                     columns={columns}
                     options={options}
-                    editable={editable(budgetTable, currentUser, props.setBudgets, categories)}
-                    detailPanel={detailPanel}
+                    editable={editable(budgetTable, setBudgets, stringifiedCategories)}
+                    detailPanel={rowData => detailPanel(rowData, transactions)}
                   />
                 );
               }) 
@@ -190,8 +190,8 @@ export default function Budgets(props) {
         <Row className="justify-content-center">
           <Col className="text-center" xs={4}>
             <BudgetModal 
-              month={props.month}
-              year={props.year}
+              month={month}
+              year={year}
             />
           </Col>
         </Row>

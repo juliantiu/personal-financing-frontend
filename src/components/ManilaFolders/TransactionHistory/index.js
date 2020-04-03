@@ -18,56 +18,68 @@ const initData = '';
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const newTransactionURI = process.env.REACT_APP_API_NEWTRANSACTION;
 const newTransactionUrl = `http://localhost:5000/${newTransactionURI}`
+const updateTransactionURI = process.env.REACT_APP_API_UPDATETRANSACTION;
+const updateTransactionURL = `http://localhost:5000/${updateTransactionURI}`
+const deleteTransactionURI = process.env.REACT_APP_API_DELETETRANSACTION;
+const deleteTransactionUrl = `http://localhost:5000/${deleteTransactionURI}`
 
 /************************************************************** HELPER FUNCTIONS */
 
+function subcategoryLookup(budgets) {
+  const subcategoryIds_to_names = {};
+  for (const category of budgets) {
+    for (const subcategory of category.subcategories) {
+      subcategoryIds_to_names[subcategory.id] = subcategory.subcategory_name;
+    }
+  }
+  
+  return subcategoryIds_to_names;
+}
+
 function categoryLookup(categories) {
   const categoryIds_to_names = {};
-  for (const category in categories) {
-    categoryIds_to_names[categories[category].id] = categories[category].category_name;
-  }
 
+  for (const category of categories) {
+    categoryIds_to_names[category.id] = category.category_name;
+  }
+  
   return categoryIds_to_names;
 }
 
-function subcategoryLookup(budgets) {
-  return {
-    OOpQ0YSKBPsU1KeugFKJ: "hello World",
-    PDwSqAd3x0NngoLOqkZL: "hello World2",
-    ewfL6PtdkOkAYaUIfnbB: "hello World3",
-    hHH6fZq2eEyoZsfgqajB: "hello World4",
-    o70QNARkbkPkeSquuykN: "hello World5"
-  };
-}
+function SubcategoryEditComponent(props) {
+  const {  value, onChange, budgets, editComponentProps } = props;
+  const rowData = { ...editComponentProps.rowData }
 
-function editComponentCategory(categories, setSelectedCategory, selectedCategory) {
+  const subcategories = budgets.filter(category => category.category === rowData.category_id);
+
   return (
     <FormControl>
       <Select
-        value={selectedCategory}
-        onChange={e => setSelectedCategory(e.target.value)}
+        value={value || ''}
+        onChange={e => onChange(e.target.value)}
       >
-        { categories.map(category => <MenuItem key={category.id} value={category.id}>{category.category_name}</MenuItem>) }
+        { subcategories[0].subcategories.map(subcategory => <MenuItem key={subcategory.id} value={subcategory.id || ''}>{subcategory.subcategory_name}</MenuItem>) }
       </Select>
     </FormControl>
   );
 }
 
-function editComponentSubcategory(budgets, selectedCategory, selectedSubcategory, setSelectedSubcategory) {
-  let subcategories = [];
-  for (const budget of budgets) {
-    if (budget.category === selectedCategory) {
-      subcategories = budget.subcategories;
-    }
+function CategoryEditComponent(props) {
+  const { value, categories, editComponentProps } = props;
+  const rowData = { ...editComponentProps.rowData }
+
+  const customOnChange = (e) => {
+    rowData.category_id = e.target.value;
+    editComponentProps.onRowDataChange(rowData);
   }
 
   return (
     <FormControl>
       <Select
-        value={selectedSubcategory}
-        onChange={e => setSelectedSubcategory(e.target.value)}
+        value={value || ''}
+        onChange={e => customOnChange(e)}
       >
-        { subcategories.map(subcategory => <MenuItem key={subcategory.id} value={subcategory.id}>{subcategory.subcategory_name || ''}</MenuItem>) }
+        { categories.map(category => <MenuItem key={category.id} value={category.id || ''}>{category.category_name}</MenuItem>) }
       </Select>
     </FormControl>
   );
@@ -91,12 +103,12 @@ function getTransactions(setTransactions, transactionsUrl) {
     setTransactions(data);
   })
   .catch(error => {
-    console.log('Failed to fetch subcategories:', error);
+    console.log('Failed toget transaction history:', error);
     setTransactions([]);
   });
 }
 
-function editable(currentUser, setTransactions, transactionsUrl) {
+function editable(currentUser, setTransactions, transactionsUrl, month, year, selectedSubcategory) {
   return {
     onRowAdd: newData => new Promise((resolve, reject) => {
       fetch(newTransactionUrl, {
@@ -110,7 +122,10 @@ function editable(currentUser, setTransactions, transactionsUrl) {
         body: JSON.stringify({
           uid: currentUser.uid,
           cost: newData.cost,
-          subcategory_id: newData.subcategory_id
+          subcategory_id: newData.subcategory_id, //selectedSubcategory,
+          date: newData.date,
+          month,
+          year
         })
       })
       .then((response) => {
@@ -126,95 +141,113 @@ function editable(currentUser, setTransactions, transactionsUrl) {
         reject(error);
       });
     }),
-    // onRowUpdate: (newData, oldData) => new Promise((resolve,reject) => {
-    //   fetch((updateSubcategoryUrl + `/${oldData.id}`), {
-    //     method: 'PUT',
-    //     mode: 'cors',
-    //     cache: 'no-cache',
-    //     credentials:'same-origin',
-    //     headers: {
-    //       'Content-type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       category_id: rowData.category,
-    //       subcategory_name: newData.subcategory_name,
-    //       allotment: newData.allotment
-    //     })
-    //   })
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     getBudgets(setBudgets, categories);
-    //     resolve(data);
-    //   })
-    //   .catch(error => {
-    //     alert('Failed to delete subcategory');
-    //     reject(error);
-    //   });
-    // }),
-    // onRowDelete: oldData => new Promise((resolve,reject) => {
-    //   fetch((deleteSubcategoryUrl + `/${oldData.id}`), {
-    //     method: 'delete',
-    //     mode: 'cors',
-    //     cache: 'no-cache',
-    //     credentials:'same-origin',
-    //   })
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     getBudgets(setBudgets, categories);
-    //     resolve(data);
-    //   })
-    //   .catch(error => {
-    //     alert('Failed to delete subcategory');
-    //     reject(error);
-    //   });
-    // })
+    onRowUpdate: (newData, oldData) => new Promise((resolve,reject) => {
+      fetch((updateTransactionURL + `/${oldData.id}`), {
+        method: 'PUT',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials:'same-origin',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          uid: currentUser.uid,
+          cost: newData.cost,
+          subcategory_id: newData.subcategory_id,
+          date: newData.date,
+          month,
+          year
+        })
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        getTransactions(setTransactions, transactionsUrl);
+        resolve(data);
+      })
+      .catch(error => {
+        alert('Failed to update transaction');
+        reject(error);
+      });
+    }),
+    onRowDelete: oldData => new Promise((resolve,reject) => {
+      fetch((deleteTransactionUrl + `/${oldData.id}`), {
+        method: 'delete',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials:'same-origin',
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        getTransactions(setTransactions, transactionsUrl);
+        resolve(data);
+      })
+      .catch(error => {
+        alert('Failed to delete transaction');
+        reject(error);
+      });
+    })
   };
 }
 
 /************************************************************************* MAIN */
 
 export default function TransactionHistory(props) {
-  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${props.year}&month=${props.monthIndex}&uid=${props.currentUser.uid}`;
+  const { month, year, transactions, categories, budgets, setTransactions, currentUser } = props;
+  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${props.year}&month=${props.month}&uid=${props.currentUser.uid}`;
   const [selectedCategory, setSelectedCategory] = useState(initData);
   const [selectedSubcategory, setSelectedSubcategory] = useState(initData);
 
   useEffect(
     () => {
-      getTransactions(props.setTransactions, transactionsUrl)
+      getTransactions(setTransactions, transactionsUrl)
     },
-    [props.setTransactions, transactionsUrl]
+    [setTransactions, transactionsUrl]
   );
 
   const [data, columns] = useMemo(
     () => {
-      const transactionsWithDates = props.transactions.map(element => {
+      const transactionsWithDates = transactions.map(element => {
         return { ...element, date: new Date(element.date) }
       })
 
       const columns = [
-        { title: 'Category', field: 'category_name', 
-          lookup: categoryLookup(props.categories, setSelectedCategory), 
-          editComponent: () => editComponentCategory(props.categories, setSelectedCategory, selectedCategory)
+        { title: 'Category', field: 'category_id', 
+          editComponent: props => (
+            <CategoryEditComponent 
+              value={props.value}
+              categories={categories}
+              editComponentProps={props}
+            />
+          ),
+          lookup: categoryLookup
         },
-        { title: 'Subcategory', field: 'subcategory_name', 
-          lookup: subcategoryLookup(props.budgets),
-          editComponent: () => editComponentSubcategory(props.budgets, selectedCategory, selectedSubcategory, setSelectedSubcategory)
+        { title: 'Subcategory', field: 'subcategory_id', 
+          editComponent: props => (
+            <SubcategoryEditComponent 
+              value={props.value}
+              onChange={props.onChange}
+              budgets={budgets}
+              editComponentProps={props}
+            />
+          ),
+          lookup: subcategoryLookup(budgets),
         },
         { title: 'Amount', field: 'cost', type: 'numeric', render: renderAmount },
-        { title: 'Description', field: 'description'},
-        { title: 'Date', field: 'date', type: 'date', editable: 'never' }
+        { title: 'Date', field: 'date', type: 'date' }
       ];
 
       return [transactionsWithDates, columns]
     },
     [
-      props.transactions, setSelectedCategory, selectedCategory, 
-      props.budgets, props.categories, selectedSubcategory, 
-      setSelectedSubcategory
+      transactions, 
+      setSelectedCategory, 
+      selectedCategory, 
+      budgets, 
+      categories
     ]
   );
 
@@ -226,7 +259,7 @@ export default function TransactionHistory(props) {
           data={data}
           columns={columns}
           options={options}
-          editable={editable(props.currentUser, props.setTransactions, transactionsUrl)}
+          editable={editable(currentUser, setTransactions, transactionsUrl, month, year, selectedSubcategory)}
         />
       </Col>
     </Row>

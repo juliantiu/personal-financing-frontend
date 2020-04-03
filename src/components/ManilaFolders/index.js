@@ -62,7 +62,7 @@ export default function ManilaFolders() {
   useEffect(
     () => {
       fetchRequest(categoriesUrl, setCategories);
-    }, [monthIndex, setCategories]
+    }, [monthIndex, setCategories, categoriesUrl]
   );
 
   const handleChange = (newMonthIndex) => {
@@ -106,13 +106,11 @@ export default function ManilaFolders() {
                 />
                 <hr />
                 <Budgets 
-                  //transactions={transactions} 
+                  transactions={transactions} 
                   month={monthIndex} 
                   year={2020}
-                  budgets={budgets}
                   setBudgets={setBudgets}
                   categories={categories}
-                  currentuser={currentUser}
                 />
               </Col>
             </Row>
