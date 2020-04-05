@@ -1,10 +1,11 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import MaterialTable from 'material-table';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import DetailPanel from './DetailPanel';
 
 /************************************************************** GLOBAL VARIABLES */
 
@@ -14,7 +15,6 @@ const options = {
   showTitle: false
 }
 
-const initData = '';
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const newTransactionURI = process.env.REACT_APP_API_NEWTRANSACTION;
 const newTransactionUrl = `http://localhost:5000/${newTransactionURI}`
@@ -24,6 +24,10 @@ const deleteTransactionURI = process.env.REACT_APP_API_DELETETRANSACTION;
 const deleteTransactionUrl = `http://localhost:5000/${deleteTransactionURI}`
 
 /************************************************************** HELPER FUNCTIONS */
+
+function detailPanel(rowData, setTransactions) {
+  return <DetailPanel rowData={rowData} setTransactions={setTransactions} />
+}
 
 function subcategoryLookup(budgets) {
   const subcategoryIds_to_names = {};
@@ -49,8 +53,11 @@ function categoryLookup(categories) {
 function SubcategoryEditComponent(props) {
   const {  value, onChange, budgets, editComponentProps } = props;
   const rowData = { ...editComponentProps.rowData }
+  let subcategories = budgets;
 
-  const subcategories = budgets.filter(category => category.category === rowData.category_id);
+  if (rowData.category_id) {
+    subcategories = budgets.filter(category => category.category === rowData.category_id);
+  }
 
   return (
     <FormControl>
@@ -91,7 +98,7 @@ function renderAmount(rowData) {
 
 function getTransactions(setTransactions, transactionsUrl) {
   fetch(transactionsUrl, {
-    method: 'GET', // Using POST because I need array to be in the body, but functions as GET
+    method: 'GET', 
     mode: 'cors',
     cache: 'no-cache',
     credentials:'same-origin',
@@ -108,7 +115,7 @@ function getTransactions(setTransactions, transactionsUrl) {
   });
 }
 
-function editable(currentUser, setTransactions, transactionsUrl, month, year, selectedSubcategory) {
+function editable(currentUser, setTransactions, transactionsUrl, month, year, transactions) {
   return {
     onRowAdd: newData => new Promise((resolve, reject) => {
       fetch(newTransactionUrl, {
@@ -136,8 +143,8 @@ function editable(currentUser, setTransactions, transactionsUrl, month, year, se
         resolve(data);
       })
       .catch(error => {
-        console.log(error);
-        setTransactions([]);
+        alert('Failed to create transaction. Make sure all fields are filled!');
+        setTransactions(transactions);
         reject(error);
       });
     }),
@@ -167,7 +174,7 @@ function editable(currentUser, setTransactions, transactionsUrl, month, year, se
         resolve(data);
       })
       .catch(error => {
-        alert('Failed to update transaction');
+        alert('Failed to update transaction. Make sure all fields are filled!');
         reject(error);
       });
     }),
@@ -197,9 +204,7 @@ function editable(currentUser, setTransactions, transactionsUrl, month, year, se
 
 export default function TransactionHistory(props) {
   const { month, year, transactions, categories, budgets, setTransactions, currentUser } = props;
-  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${props.year}&month=${props.month}&uid=${props.currentUser.uid}`;
-  const [selectedCategory, setSelectedCategory] = useState(initData);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(initData);
+  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   useEffect(
     () => {
@@ -223,7 +228,7 @@ export default function TransactionHistory(props) {
               editComponentProps={props}
             />
           ),
-          lookup: categoryLookup
+          lookup: categoryLookup(categories)
         },
         { title: 'Subcategory', field: 'subcategory_id', 
           editComponent: props => (
@@ -244,8 +249,6 @@ export default function TransactionHistory(props) {
     },
     [
       transactions, 
-      setSelectedCategory, 
-      selectedCategory, 
       budgets, 
       categories
     ]
@@ -259,7 +262,8 @@ export default function TransactionHistory(props) {
           data={data}
           columns={columns}
           options={options}
-          editable={editable(currentUser, setTransactions, transactionsUrl, month, year, selectedSubcategory)}
+          detailPanel={rowData => detailPanel(rowData, setTransactions)}
+          editable={editable(currentUser, setTransactions, transactionsUrl, month, year, transactions)}
         />
       </Col>
     </Row>

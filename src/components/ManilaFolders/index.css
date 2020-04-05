@@ -37,4 +37,9 @@
 .page-heading-title {
   /* font-family: 'Permanent Marker', cursive; */
   font-family: 'Allerta Stencil', sans-serif;
+  margin-bottom: 10px;
+}
+
+tr:nth-child(odd) {
+  background: rgb(250,250,250);
 }

@@ -9,13 +9,34 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { AuthContext } from "../../../contexts/AuthState";
 
+const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
 const newCategoryURI = process.env.REACT_APP_API_NEWCATEGORY;
 const categoryURL = `http://localhost:5000/${newCategoryURI}`;
 
+function getCategories(categoriesUrl, setCategories) {
+  fetch(categoriesUrl, {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials:'same-origin',
+  })
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    setCategories(data);
+  })
+  .catch(error => {
+    alert(error);
+  });
+}
+
 export default function BudgetModal(props) {
+  const { month, year, setCategories } = props
   const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState(''); // For the text input
   const { currentUser } = useContext(AuthContext);
+  const categoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   const handleChange = (event) => {
     setCategoryName(event.target.value);
@@ -41,8 +62,8 @@ export default function BudgetModal(props) {
       body: JSON.stringify({
         uid: currentUser.uid,
         category_name: categoryName,
-        month: props.month,
-        year: props.year
+        month: month,
+        year: year
       })
     })
     .then((response) => {
@@ -50,7 +71,7 @@ export default function BudgetModal(props) {
     })
     .then((data) => {
       setOpen(false);
-      window.location.reload();
+      getCategories(categoriesUrl, setCategories);
     })
     .catch(error => {
       alert(error);

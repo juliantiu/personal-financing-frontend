@@ -1,11 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import MaterialTable from 'material-table';
-
-import { AuthContext } from "../../../contexts/AuthState";
-
-import BudgetModal from './BudgetModal';
+import BudgetAddModal from './BudgetAddModal';
+import BudgetDeleteModal from './BudgetDeleteModal';
 import DetailPanel from './DetailsPanel';
 
 /************************************************************** GLOBAL VARIABLES */
@@ -17,10 +15,11 @@ const columns = [
 ];
 
 const options = {
-  pageSizeOptions: [5, 10, 15],
-  search: false,
-
+  pageSize: 3,
+  pageSizeOptions: [3, 5, 10, 15],
+  search: false
 }
+
 
 const newSubcategoryURI = process.env.REACT_APP_API_NEWSUBCATEGORY;
 const newSubcategoryUrl = `http://localhost:5000/${newSubcategoryURI}`;
@@ -148,7 +147,16 @@ function editable(rowData, setBudgets, categories) {
 /************************************************************************* MAIN */
 
 export default function Budgets(props) {
-  const { transactions, month, year, setBudgets, categories } = props;
+  const { 
+    transactions, 
+    month, 
+    year, 
+    setBudgets, 
+    categories, 
+    budgets, 
+    setCategories, 
+    currentUser 
+  } = props;
   const categoryIds_to_names = new Map();
   for (const category in categories) {
     categoryIds_to_names.set(categories[category].id, categories[category].category_name);
@@ -159,9 +167,9 @@ export default function Budgets(props) {
   
   useEffect(
     () => {
-      getBudgets(props.setBudgets, stringifiedCategories);
+      getBudgets(setBudgets, stringifiedCategories);
     },
-    [setBudgets, stringifiedCategories]
+    [setBudgets, stringifiedCategories, setCategories]
    );
 
   return (
@@ -171,27 +179,39 @@ export default function Budgets(props) {
           <Col className="page-heading">
             <h1 className="page-heading-title">Budgets</h1>
             {
-              props.budgets.map(budgetTable => {
+              budgets.map(budgetTable => {
                 return (
-                  <MaterialTable
-                    key={budgetTable.category}
-                    title={categoryIds_to_names.get(budgetTable.category)}
-                    data={budgetTable.subcategories}
-                    columns={columns}
-                    options={options}
-                    editable={editable(budgetTable, setBudgets, stringifiedCategories)}
-                    detailPanel={rowData => detailPanel(rowData, transactions)}
-                  />
+                  <>
+                    <MaterialTable
+                      key={budgetTable.category}
+                      title={categoryIds_to_names.get(budgetTable.category)}
+                      data={budgetTable.subcategories}
+                      columns={columns}
+                      options={options}
+                      editable={editable(budgetTable, setBudgets, stringifiedCategories)}
+                      detailPanel={rowData => detailPanel(rowData, transactions)}
+                    />
+                    <br />
+                  </>
                 );
               }) 
             }
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col className="text-center" xs={4}>
-            <BudgetModal 
+          <Col className="text-center" xs={4} className="text-right">
+            <BudgetAddModal 
               month={month}
               year={year}
+              setCategories={setCategories}
+              currentUser={currentUser}
+            />
+          </Col>
+          <Col className="text-center" xs={4} className="text-left">
+            <BudgetDeleteModal 
+              setCategories={setCategories}
+              currentUser={currentUser}
+              categories={categories}
             />
           </Col>
         </Row>
