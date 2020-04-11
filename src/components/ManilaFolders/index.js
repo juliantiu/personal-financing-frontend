@@ -47,13 +47,14 @@ function fetchRequest(url, setMethod) {
   });
 }
 
-const initDataState = []
+const initDataState = [];
+const initMonth = new Date(Date.now()).getMonth();
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
 const year = 2020;
 
 export default function ManilaFolders() {
   const { currentUser } = useContext(AuthContext);
-  const [monthIndex, setMonthIndex] = useState(0);
+  const [monthIndex, setMonthIndex] = useState(initMonth);
   const [transactions, setTransactions] = useState(initDataState);
   const [budgets, setBudgets] = useState(initDataState);
   const [categories, setCategories] = useState(initDataState);
@@ -90,10 +91,10 @@ export default function ManilaFolders() {
             </Row>
             <Row className="justify-content-center folder">
               <Col className="page" xs={10}>
-                {/* <Summary 
+                <Summary 
                   transactions={transactions} 
                   budgets={budgets}
-                /> */}
+                />
                 <hr />
                 <TransactionHistory 
                   month={monthIndex} 

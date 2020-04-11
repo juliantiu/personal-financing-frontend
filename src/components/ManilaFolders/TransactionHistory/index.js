@@ -242,7 +242,7 @@ export default function TransactionHistory(props) {
           lookup: subcategoryLookup(budgets),
         },
         { title: 'Amount', field: 'cost', type: 'numeric', render: renderAmount },
-        { title: 'Date', field: 'date', type: 'date' }
+        { title: 'Date', field: 'date', type: 'date', defaultSort: 'asc'}
       ];
 
       return [transactionsWithDates, columns]

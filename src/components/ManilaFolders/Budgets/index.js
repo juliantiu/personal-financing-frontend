@@ -210,20 +210,26 @@ export default function Budgets(props) {
                 <h1 className="page-heading-title">Budgets</h1>
               </Col>
               <Col xs={6}>
-                <BudgetAddModal 
-                  month={month}
-                  year={year}
-                  setCategories={setCategories}
-                  currentUser={currentUser}
-                />
-                <BudgetDeleteModal 
-                  month={month}
-                  year={year}
-                  setCategories={setCategories}
-                  currentUser={currentUser}
-                  categories={categories}
-                  setTransactions={setTransactions}
-                />
+                <Row>
+                  <Col xs={6} className="text-right">
+                    <BudgetAddModal 
+                      month={month}
+                      year={year}
+                      setCategories={setCategories}
+                      currentUser={currentUser}
+                    />
+                  </Col>
+                  <Col xs={6} className="text-left">
+                    <BudgetDeleteModal 
+                      month={month}
+                      year={year}
+                      setCategories={setCategories}
+                      currentUser={currentUser}
+                      categories={categories}
+                      setTransactions={setTransactions}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
             { sortedBudgets.map(budgetTable => {

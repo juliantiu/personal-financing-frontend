@@ -8,27 +8,29 @@ function getBalance() {
   return 5380.0
 }
 
-function calculateCategoriesTotal(monthBudgetData) {
-  return monthBudgetData.reduce(
-    (accumulator, currentValue) => {
-      return accumulator += currentValue.allotted;
-    }, 0
-  );
+function calculateCategoriesTotal(budgets) {
+  console.log(budgets);
+  return budgets.reduce(
+    (total, currentValue) => {
+      return total += currentValue.subcategories.reduce(
+        (acc, subcategory) => (acc + subcategory.allotment),
+        0
+      );
+    }, 
+    0)
+  ;
 }
 
 function calculateSpent(transactions) {
-  return transactions.reduce(
-    (accumulator, currentValue) => {
-      return accumulator += parseInt(currentValue.cost);
-    }, 0
-  );
+  return transactions.reduce((acc, currentValue) => (acc += parseInt(currentValue.cost)), 0);
 }
 
 export default function Summary(props) {
+  const { transactions, budgets } = props;
 
   const balance = getBalance();
-  const categoriesTotals = calculateCategoriesTotal(props.budgets);
-  const spent = calculateSpent(props.transactions);
+  const categoriesTotals = calculateCategoriesTotal(budgets);
+  const spent = calculateSpent(transactions);
   const remaining = balance - spent;
   let categoriesTotalColor;
   let remainingColor;
