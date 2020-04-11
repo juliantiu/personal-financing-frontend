@@ -7,9 +7,9 @@ export default function DetailPanel(props) {
   const { rowData, transactions } = props
   const filteredTransactions = useMemo(
     () => {
-      return transactions.filter(transaction => {
-        if (transaction.subcategory_name === rowData.subcategory_name) return transaction; 
-      })
+      return transactions.filter(transaction => 
+        (transaction.subcategory_name === rowData.subcategory_name)
+      )
     },
     [rowData, transactions]
   );

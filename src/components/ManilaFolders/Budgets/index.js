@@ -20,7 +20,7 @@ const options = {
   search: false
 }
 
-
+const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const newSubcategoryURI = process.env.REACT_APP_API_NEWSUBCATEGORY;
 const newSubcategoryUrl = `http://localhost:5000/${newSubcategoryURI}`;
 const subcategoriesURI = process.env.REACT_APP_API_GETSUBCATEGORIES;
@@ -31,6 +31,25 @@ const updateSubcategoryURI = process.env.REACT_APP_API_UPDATESUBCATEGORY;
 const updateSubcategoryUrl = `http://localhost:5000/${updateSubcategoryURI}`
 
 /************************************************************** HELPER FUNCTIONS */
+
+function getTransactions(setTransactions, transactionsUrl) {
+  fetch(transactionsUrl, {
+    method: 'GET', 
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials:'same-origin',
+  })
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    setTransactions(data);
+  })
+  .catch(error => {
+    console.log('Failed toget transaction history:', error);
+    setTransactions([]);
+  });
+}
 
 function getBudgets(setBudgets, categories) {
   fetch(subcategoriesUrl, {
@@ -65,7 +84,7 @@ function renderAmount(rowData) {
   return `$${rowData.allotment}`;
 }
 
-function editable(rowData, setBudgets, categories) {
+function editable(rowData, setBudgets, categories, setTransactions, transactionsUrl) {
   return {
     onRowAdd: newData => new Promise((resolve, reject) => {
       fetch((newSubcategoryUrl), {
@@ -115,6 +134,7 @@ function editable(rowData, setBudgets, categories) {
       })
       .then((data) => {
         getBudgets(setBudgets, categories);
+        getTransactions(setTransactions, transactionsUrl);
         resolve(data);
       })
       .catch(error => {
@@ -149,6 +169,7 @@ function editable(rowData, setBudgets, categories) {
 export default function Budgets(props) {
   const { 
     transactions, 
+    setTransactions,
     month, 
     year, 
     setBudgets, 
@@ -157,6 +178,7 @@ export default function Budgets(props) {
     setCategories, 
     currentUser 
   } = props;
+  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
   const categoryIds_to_names = new Map();
   for (const category in categories) {
     categoryIds_to_names.set(categories[category].id, categories[category].category_name);
@@ -164,12 +186,18 @@ export default function Budgets(props) {
 
   const category_ids = categories.map(elements => elements.id);
   const stringifiedCategories = JSON.stringify(category_ids);
+  const sortedBudgets = budgets.sort(
+    (currBudget, nextBudget) => (
+      categoryIds_to_names.get(currBudget.category) > categoryIds_to_names.get(nextBudget.category) 
+      ? 1 : -1
+    )
+  );
   
   useEffect(
     () => {
       getBudgets(setBudgets, stringifiedCategories);
     },
-    [setBudgets, stringifiedCategories, setCategories]
+    [setBudgets, stringifiedCategories, categories]
    );
 
   return (
@@ -177,42 +205,42 @@ export default function Budgets(props) {
       <Col>
         <Row className="page-section">
           <Col className="page-heading">
-            <h1 className="page-heading-title">Budgets</h1>
-            {
-              budgets.map(budgetTable => {
-                return (
-                  <>
-                    <MaterialTable
-                      key={budgetTable.category}
-                      title={categoryIds_to_names.get(budgetTable.category)}
-                      data={budgetTable.subcategories}
-                      columns={columns}
-                      options={options}
-                      editable={editable(budgetTable, setBudgets, stringifiedCategories)}
-                      detailPanel={rowData => detailPanel(rowData, transactions)}
-                    />
-                    <br />
-                  </>
-                );
-              }) 
-            }
-          </Col>
-        </Row>
-        <Row className="justify-content-center">
-          <Col className="text-center" xs={4} className="text-right">
-            <BudgetAddModal 
-              month={month}
-              year={year}
-              setCategories={setCategories}
-              currentUser={currentUser}
-            />
-          </Col>
-          <Col className="text-center" xs={4} className="text-left">
-            <BudgetDeleteModal 
-              setCategories={setCategories}
-              currentUser={currentUser}
-              categories={categories}
-            />
+            <Row>
+              <Col xs={6}>
+                <h1 className="page-heading-title">Budgets</h1>
+              </Col>
+              <Col xs={6}>
+                <BudgetAddModal 
+                  month={month}
+                  year={year}
+                  setCategories={setCategories}
+                  currentUser={currentUser}
+                />
+                <BudgetDeleteModal 
+                  month={month}
+                  year={year}
+                  setCategories={setCategories}
+                  currentUser={currentUser}
+                  categories={categories}
+                  setTransactions={setTransactions}
+                />
+              </Col>
+            </Row>
+            { sortedBudgets.map(budgetTable => {
+              return (
+                <React.Fragment key={budgetTable.category}>
+                  <MaterialTable
+                    title={categoryIds_to_names.get(budgetTable.category)}
+                    data={budgetTable.subcategories}
+                    columns={columns}
+                    options={options}
+                    editable={editable(budgetTable, setBudgets, stringifiedCategories, setTransactions, transactionsUrl)}
+                    detailPanel={rowData => detailPanel(rowData, transactions)}
+                  />
+                  <br />
+                </React.Fragment>
+              );
+            })}
           </Col>
         </Row>
       </Col>

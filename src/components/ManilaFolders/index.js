@@ -59,8 +59,6 @@ export default function ManilaFolders() {
   const [categories, setCategories] = useState(initDataState);
   const categoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${monthIndex}&uid=${currentUser.uid}`;
 
-  //console.log(budgets);
-
   useEffect(
     () => {
       fetchRequest(categoriesUrl, setCategories);
@@ -107,7 +105,8 @@ export default function ManilaFolders() {
                   currentUser={currentUser}
                 />
                 <hr />
-                <Budgets 
+                <Budgets
+                  setTransactions={setTransactions} 
                   transactions={transactions} 
                   month={monthIndex} 
                   year={2020}

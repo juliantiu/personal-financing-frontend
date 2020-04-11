@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react';
 
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,11 +12,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { AuthContext } from "../../../contexts/AuthState";
 
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
-const newCategoryURI = process.env.REACT_APP_API_NEWCATEGORY;
-const categoryURL = `http://localhost:5000/${newCategoryURI}`;
+const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
+const deleteCategoryURI = process.env.REACT_APP_API_DELETECATEGORY;
+const deleteCategoryUrl = `http://localhost:5000/${deleteCategoryURI}`;
 
-function getCategories(categoriesUrl, setCategories) {
-  fetch(categoriesUrl, {
+function fetchRequest(url, setMethod) {
+  fetch(url, {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',
@@ -24,7 +27,7 @@ function getCategories(categoriesUrl, setCategories) {
     return response.json();
   })
   .then((data) => {
-    setCategories(data);
+    setMethod(data);
   })
   .catch(error => {
     alert(error);
@@ -32,11 +35,12 @@ function getCategories(categoriesUrl, setCategories) {
 }
 
 export default function BudgetModal(props) {
-  const { month, year, setCategories } = props
+  const { month, year, setCategories, categories, setTransactions } = props
   const [open, setOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState(''); // For the text input
+  const [categoryId, setCategoryName] = useState(''); // For the text input
   const { currentUser } = useContext(AuthContext);
-  const categoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const getCategoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   const handleChange = (event) => {
     setCategoryName(event.target.value);
@@ -51,27 +55,19 @@ export default function BudgetModal(props) {
   };
 
   const handleSubmit = () => {
-    fetch(categoryURL, {
-      method: 'POST',
+    fetch((deleteCategoryUrl + `/${categoryId}`), {
+      method: 'delete',
       mode: 'cors',
       cache: 'no-cache',
       credentials:'same-origin',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        uid: currentUser.uid,
-        category_name: categoryName,
-        month: month,
-        year: year
-      })
     })
     .then((response) => {
       return response.json();
     })
     .then((data) => {
       setOpen(false);
-      getCategories(categoriesUrl, setCategories);
+      fetchRequest(getCategoriesUrl, setCategories);
+      fetchRequest(transactionsUrl, setTransactions)
     })
     .catch(error => {
       alert(error);
@@ -84,17 +80,16 @@ export default function BudgetModal(props) {
         DELETE BUDGET
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">NEW BUDGET CATEGORY</DialogTitle>
+        <DialogTitle id="form-dialog-title">DELETE BUDGET CATEGORY</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Category name"
-            type="name"
+          <InputLabel>Category name</InputLabel>
+          <Select
+            value={categoryId}
             onChange={handleChange}
             fullWidth
-          />
+          >
+            { categories.map(category => (<MenuItem key={category.id} value={category.id}>{category.category_name}</MenuItem>)) }
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
