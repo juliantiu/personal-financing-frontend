@@ -50,7 +50,7 @@ function fetchRequest(url, setMethod) {
 const initDataState = [];
 const initMonth = new Date(Date.now()).getMonth();
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
-const year = 2020;
+const year = new Date(Date.now()).getFullYear();
 
 export default function ManilaFolders() {
   const { currentUser } = useContext(AuthContext);
@@ -98,7 +98,7 @@ export default function ManilaFolders() {
                 <hr />
                 <TransactionHistory 
                   month={monthIndex} 
-                  year={2020}                  
+                  year={year}                  
                   transactions={transactions} 
                   categories={categories} 
                   budgets={budgets}
@@ -110,7 +110,7 @@ export default function ManilaFolders() {
                   setTransactions={setTransactions} 
                   transactions={transactions} 
                   month={monthIndex} 
-                  year={2020}
+                  year={year}
                   budgets={budgets}
                   setBudgets={setBudgets}
                   categories={categories}

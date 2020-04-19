@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import app from '../../firebase';
 
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,7 +16,7 @@ function logout() {
   app.auth().signOut()
 }
 
-export default function TemporaryDrawer() {
+export default function CabinetDrawer() {
   const [drawerState, setDrawerState] = useState({
     top: false,
   });
@@ -27,13 +30,17 @@ export default function TemporaryDrawer() {
   };
 
   const fullList = side => (
-    <div
+    <Container fluid
       role="presentation"
       onClick={toggleDrawer(side, false)}
       onKeyDown={toggleDrawer(side, false)}
     >
-      <button onClick={logout}>logout</button>
-    </div>
+      <Row>
+        <Col xs={12}>
+          <button onClick={logout}>logout</button>
+        </Col>
+      </Row>
+    </Container>
   );
 
   return (
