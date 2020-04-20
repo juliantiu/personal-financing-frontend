@@ -104,12 +104,12 @@ export default function BudgetModal(props) {
           <Select
             value={categoryId}
             onChange={handleSelectChange}
+            autoFocus
             fullWidth
           >
             { categories.map(category => (<MenuItem key={category.id} value={category.id}>{category.category_name}</MenuItem>)) }
           </Select>
           <TextField
-            autoFocus
             margin="dense"
             id="name"
             label="New category name"

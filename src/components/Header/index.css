@@ -6,3 +6,28 @@
 img {
   max-height: 80px;
 }
+
+.drawer-container {
+  max-height: 400px;
+  overflow-y: scroll;
+  padding-top: 20px;
+  background-color: #707070;
+}
+
+.year {
+  width: 100%;
+  height: 30px;
+  background-color: #fff7dc;
+  text-align: left;
+}
+
+.year::before {
+  position: absolute;
+  left: 15px;
+  top: -10px;
+  content: 'hello'
+}
+
+.year:hover {
+  transform: translateY(-3px);
+}

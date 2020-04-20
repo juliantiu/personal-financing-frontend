@@ -20,7 +20,7 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 const initDataState = [];
 const initMonth = new Date(Date.now()).getMonth();
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
-const year = new Date(Date.now()).getFullYear();
+const currYear = new Date(Date.now()).getFullYear();
 
 const months = [
   'January', 
@@ -57,6 +57,7 @@ function fetchRequest(url, setMethod) {
 
 export default function ManilaFolders() {
   const { currentUser } = useContext(AuthContext);
+  const [year, setYear] = useState(currYear);
   const [monthIndex, setMonthIndex] = useState(initMonth);
   const [transactions, setTransactions] = useState(initDataState);
   const [budgets, setBudgets] = useState(initDataState);
@@ -76,7 +77,9 @@ export default function ManilaFolders() {
 
   return (
     <>
-      <Header />
+      <Header 
+        setYear={setYear}
+      />
       <Container fluid>
         <Row>
           <Col>

@@ -12,6 +12,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import './index.css';
 import logo from '../../assets/img/handle.png';
 
+const yearList = [
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025
+];
+
 function logout() {
   app.auth().signOut()
 }
@@ -34,11 +43,25 @@ export default function CabinetDrawer() {
       role="presentation"
       onClick={toggleDrawer(side, false)}
       onKeyDown={toggleDrawer(side, false)}
+      className="drawer-container"
     >
       <Row>
         <Col xs={12}>
-          <button onClick={logout}>logout</button>
+          {yearList.map(
+            year => (
+              <Row key={`folder-year-${year}`}>
+                <Col xs={12}>
+                  <button className="year">{year}</button>
+                </Col>
+              </Row>
+            )
+          )}
         </Col>
+        <Row>
+          <Col xs={12}>
+            <button onClick={logout}>logout</button>
+          </Col>
+        </Row>
       </Row>
     </Container>
   );
