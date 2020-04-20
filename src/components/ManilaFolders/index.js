@@ -14,6 +14,14 @@ import Budgets from './Budgets';
 
 import './index.css';
 
+const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+  process.env.REACT_APP_API_DEV_URL :
+  process.env.REACT_APP_API_PROD_URL
+const initDataState = [];
+const initMonth = new Date(Date.now()).getMonth();
+const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
+const year = new Date(Date.now()).getFullYear();
+
 const months = [
   'January', 
   'February', 
@@ -47,18 +55,13 @@ function fetchRequest(url, setMethod) {
   });
 }
 
-const initDataState = [];
-const initMonth = new Date(Date.now()).getMonth();
-const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
-const year = new Date(Date.now()).getFullYear();
-
 export default function ManilaFolders() {
   const { currentUser } = useContext(AuthContext);
   const [monthIndex, setMonthIndex] = useState(initMonth);
   const [transactions, setTransactions] = useState(initDataState);
   const [budgets, setBudgets] = useState(initDataState);
   const [categories, setCategories] = useState(initDataState);
-  const categoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${monthIndex}&uid=${currentUser.uid}`;
+  const categoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${monthIndex}&uid=${currentUser.uid}`;
 
   useEffect(
     () => {

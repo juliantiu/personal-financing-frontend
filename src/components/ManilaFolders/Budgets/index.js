@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import MaterialTable from 'material-table';
 import BudgetAddModal from './BudgetAddModal';
+import BudgetUpdateModal from './BudgetUpdateModal';
 import BudgetDeleteModal from './BudgetDeleteModal';
 import DetailPanel from './DetailsPanel';
 
@@ -20,15 +21,18 @@ const options = {
   search: false
 }
 
+const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+  process.env.REACT_APP_API_DEV_URL :
+  process.env.REACT_APP_API_PROD_URL
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const newSubcategoryURI = process.env.REACT_APP_API_NEWSUBCATEGORY;
-const newSubcategoryUrl = `http://localhost:5000/${newSubcategoryURI}`;
+const newSubcategoryUrl = `${hostname}/${newSubcategoryURI}`;
 const subcategoriesURI = process.env.REACT_APP_API_GETSUBCATEGORIES;
-const subcategoriesUrl = `http://localhost:5000/${subcategoriesURI}`;
+const subcategoriesUrl = `${hostname}/${subcategoriesURI}`;
 const deleteSubcategoryURI = process.env.REACT_APP_API_DELETESUBCATEGORY;
-const deleteSubcategoryUrl = `http://localhost:5000/${deleteSubcategoryURI}`;
+const deleteSubcategoryUrl = `${hostname}/${deleteSubcategoryURI}`;
 const updateSubcategoryURI = process.env.REACT_APP_API_UPDATESUBCATEGORY;
-const updateSubcategoryUrl = `http://localhost:5000/${updateSubcategoryURI}`
+const updateSubcategoryUrl = `${hostname}/${updateSubcategoryURI}`
 
 /************************************************************** HELPER FUNCTIONS */
 
@@ -178,7 +182,7 @@ export default function Budgets(props) {
     setCategories, 
     currentUser 
   } = props;
-  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `${hostname}/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
   const categoryIds_to_names = new Map();
   for (const category in categories) {
     categoryIds_to_names.set(categories[category].id, categories[category].category_name);
@@ -206,12 +210,12 @@ export default function Budgets(props) {
         <Row className="page-section">
           <Col className="page-heading">
             <Row>
-              <Col xs={6}>
+              <Col xs={4}>
                 <h1 className="page-heading-title">Budgets</h1>
               </Col>
-              <Col xs={6}>
+              <Col xs={8}>
                 <Row>
-                  <Col xs={6} className="text-right">
+                  <Col xs={4} className="text-right">
                     <BudgetAddModal 
                       month={month}
                       year={year}
@@ -219,12 +223,21 @@ export default function Budgets(props) {
                       currentUser={currentUser}
                     />
                   </Col>
-                  <Col xs={6} className="text-left">
-                    <BudgetDeleteModal 
+                  <Col xs={4} className="text-center">
+                    <BudgetUpdateModal 
                       month={month}
                       year={year}
                       setCategories={setCategories}
                       currentUser={currentUser}
+                      categories={categories}
+                      setTransactions={setTransactions}
+                    />
+                  </Col>
+                  <Col xs={4} className="text-left">
+                    <BudgetDeleteModal 
+                      month={month}
+                      year={year}
+                      setCategories={setCategories}
                       categories={categories}
                       setTransactions={setTransactions}
                     />

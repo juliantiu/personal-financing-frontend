@@ -11,10 +11,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { AuthContext } from "../../../contexts/AuthState";
 
+const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+  process.env.REACT_APP_API_DEV_URL :
+  process.env.REACT_APP_API_PROD_URL
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const deleteCategoryURI = process.env.REACT_APP_API_DELETECATEGORY;
-const deleteCategoryUrl = `http://localhost:5000/${deleteCategoryURI}`;
+const deleteCategoryUrl = `${hostname}/${deleteCategoryURI}`;
 
 function fetchRequest(url, setMethod) {
   fetch(url, {
@@ -37,13 +40,13 @@ function fetchRequest(url, setMethod) {
 export default function BudgetModal(props) {
   const { month, year, setCategories, categories, setTransactions } = props
   const [open, setOpen] = useState(false);
-  const [categoryId, setCategoryName] = useState(''); // For the text input
+  const [categoryId, setCategoryId] = useState(''); // For the text input
   const { currentUser } = useContext(AuthContext);
-  const getCategoriesUrl = `http://localhost:5000/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
-  const transactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const getCategoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `${hostname}/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   const handleChange = (event) => {
-    setCategoryName(event.target.value);
+    setCategoryId(event.target.value);
   }
 
   const handleClickOpen = () => {
@@ -76,7 +79,7 @@ export default function BudgetModal(props) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
         DELETE BUDGET
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

@@ -16,7 +16,6 @@
   background-color: #fff3c8;
   border-color: #dee2e6 !important;
   color: #323232;
-  font-family: 'Permanent Marker', cursive;
 }
 
 .nav-item.nav-link.active {
@@ -35,8 +34,6 @@
 }
 
 .page-heading-title {
-  /* font-family: 'Permanent Marker', cursive; */
-  font-family: 'Allerta Stencil', sans-serif;
   margin-bottom: 10px;
 }
 

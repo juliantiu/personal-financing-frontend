@@ -1,6 +1,9 @@
 import React, { useState, useContext } from 'react';
 
 import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,11 +16,12 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
   process.env.REACT_APP_API_DEV_URL :
   process.env.REACT_APP_API_PROD_URL
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
-const newCategoryURI = process.env.REACT_APP_API_NEWCATEGORY;
-const categoryURL = `${hostname}/${newCategoryURI}`;
+const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
+const updateCategoryURI = process.env.REACT_APP_API_UPDATECATEGORY;
+const updateCategoryUrl = `${hostname}/${updateCategoryURI}`;
 
-function getCategories(categoriesUrl, setCategories) {
-  fetch(categoriesUrl, {
+function fetchRequest(url, setMethod) {
+  fetch(url, {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',
@@ -27,7 +31,7 @@ function getCategories(categoriesUrl, setCategories) {
     return response.json();
   })
   .then((data) => {
-    setCategories(data);
+    setMethod(data);
   })
   .catch(error => {
     alert(error);
@@ -35,14 +39,20 @@ function getCategories(categoriesUrl, setCategories) {
 }
 
 export default function BudgetModal(props) {
-  const { month, year, setCategories } = props
+  const { month, year, setCategories, categories, setTransactions } = props
   const [open, setOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState(''); // For the text input
+  const [categoryId, setCategoryId] = useState(''); // For the select input
+  const [newCategoryName, setNewCategoryName] = useState(''); // For the text input
   const { currentUser } = useContext(AuthContext);
-  const categoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const getCategoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `${hostname}/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
-  const handleChange = (event) => {
-    setCategoryName(event.target.value);
+  const handleSelectChange = (event) => {
+    setCategoryId(event.target.value);
+  }
+
+  const handleNameChange = (event) => {
+    setNewCategoryName(event.target.value);
   }
 
   const handleClickOpen = () => {
@@ -54,8 +64,8 @@ export default function BudgetModal(props) {
   };
 
   const handleSubmit = () => {
-    fetch(categoryURL, {
-      method: 'POST',
+    fetch((updateCategoryUrl + `/${categoryId}`), {
+      method: 'put',
       mode: 'cors',
       cache: 'no-cache',
       credentials:'same-origin',
@@ -63,10 +73,10 @@ export default function BudgetModal(props) {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        uid: currentUser.uid,
-        category_name: categoryName,
-        month: month,
-        year: year
+        month,
+        year,
+        category_name: newCategoryName,
+        uid: currentUser.uid
       })
     })
     .then((response) => {
@@ -74,7 +84,8 @@ export default function BudgetModal(props) {
     })
     .then((data) => {
       setOpen(false);
-      getCategories(categoriesUrl, setCategories);
+      fetchRequest(getCategoriesUrl, setCategories);
+      fetchRequest(transactionsUrl, setTransactions)
     })
     .catch(error => {
       alert(error);
@@ -84,18 +95,26 @@ export default function BudgetModal(props) {
   return (
     <div>
       <Button variant="contained" color="default" onClick={handleClickOpen}>
-        NEW BUDGET
+        UPDATE BUDGET
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">NEW BUDGET CATEGORY</DialogTitle>
+        <DialogTitle id="form-dialog-title">UPDATE BUDGET CATEGORY</DialogTitle>
         <DialogContent>
+          <InputLabel>Category name</InputLabel>
+          <Select
+            value={categoryId}
+            onChange={handleSelectChange}
+            fullWidth
+          >
+            { categories.map(category => (<MenuItem key={category.id} value={category.id}>{category.category_name}</MenuItem>)) }
+          </Select>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Category name"
+            label="New category name"
             type="name"
-            onChange={handleChange}
+            onChange={handleNameChange}
             fullWidth
           />
         </DialogContent>

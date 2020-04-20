@@ -6,8 +6,11 @@ import Button from 'react-bootstrap/button';
 import InputGroup from 'react-bootstrap/inputgroup';
 import FormControl from 'react-bootstrap/formcontrol';
 
+const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+  process.env.REACT_APP_API_DEV_URL :
+  process.env.REACT_APP_API_PROD_URL
 const updateTransactionURI = process.env.REACT_APP_API_UPDATETRANSACTION;
-const updateTransactionUrl = `http://localhost:5000/${updateTransactionURI}`;
+const updateTransactionUrl = `${hostname}/${updateTransactionURI}`;
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 
 function getTransactions(getTransactionsUrl, setTransactions) {
@@ -32,7 +35,7 @@ function getTransactions(getTransactionsUrl, setTransactions) {
 export default function DetailPanel(props) {
   const { rowData, setTransactions } = props;
   const { uid, cost, subcategory_id, date, month, year } = rowData;
-  const getTransactionsUrl = `http://localhost:5000/${getTransactionsURI}?year=${year}&month=${month}&uid=${uid}`;
+  const getTransactionsUrl = `${hostname}${getTransactionsURI}?year=${year}&month=${month}&uid=${uid}`;
   const [description, setDescription] = useState(rowData.description);
 
   const onChange = (val) => {
