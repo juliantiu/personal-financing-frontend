@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import app from '../../firebase';
 
 import Container from 'react-bootstrap/Container';
@@ -18,14 +18,20 @@ const yearList = [
   2022,
   2023,
   2024,
-  2025
+  2025,
+  2026,
+  2027,
+  2028,
+  2029,
+  2030
 ];
 
 function logout() {
   app.auth().signOut()
 }
 
-export default function CabinetDrawer() {
+export default function CabinetDrawer(props) {
+  const { setYear } = props;
   const [drawerState, setDrawerState] = useState({
     top: false,
   });
@@ -38,6 +44,10 @@ export default function CabinetDrawer() {
     setDrawerState({ ...drawerState, [side]: open });
   };
 
+  const handlehandleChangeYear = (year) => {
+    setYear(year);
+  }
+
   const fullList = side => (
     <Container fluid
       role="presentation"
@@ -45,23 +55,33 @@ export default function CabinetDrawer() {
       onKeyDown={toggleDrawer(side, false)}
       className="drawer-container"
     >
-      <Row>
+      <Row className="folder-container">
         <Col xs={12}>
-          {yearList.map(
-            year => (
-              <Row key={`folder-year-${year}`}>
-                <Col xs={12}>
-                  <button className="year">{year}</button>
-                </Col>
-              </Row>
-            )
-          )}
+          <div className="drawer-shoot">
+            {yearList.map(
+              year => (
+                <Row key={`folder-year-${year}`}>
+                  <Col xs={12}>
+                    <button 
+                      className="year" 
+                      value={year} 
+                      onClick={e => handlehandleChangeYear(parseInt(e.target.value))}
+                    >
+                      <div className="tab">
+                        {year}
+                      </div>
+                    </button> 
+                  </Col>
+                </Row>
+              )
+            )}
+          </div>
         </Col>
-        <Row>
-          <Col xs={12}>
-            <button onClick={logout}>logout</button>
-          </Col>
-        </Row>
+      </Row>
+      <Row className="drawer-extras">
+        <Col xs={5} className="text-center">
+          <Button onClick={logout}>logout</Button>
+        </Col>
       </Row>
     </Container>
   );

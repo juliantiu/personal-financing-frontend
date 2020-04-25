@@ -9,7 +9,6 @@ function getBalance() {
 }
 
 function calculateCategoriesTotal(budgets) {
-  console.log(budgets);
   return budgets.reduce(
     (total, currentValue) => {
       return total += currentValue.subcategories.reduce(

@@ -7,7 +7,7 @@ import Tab from 'react-bootstrap/Tab';
 
 import { AuthContext } from "../../contexts/AuthState";
 
-import Header from '../Header';
+import CabinetDrawer from '../CabinetDrawer';
 import Summary from './Summary';
 import TransactionHistory from './TransactionHistory';
 import Budgets from './Budgets';
@@ -77,7 +77,7 @@ export default function ManilaFolders() {
 
   return (
     <>
-      <Header 
+      <CabinetDrawer 
         setYear={setYear}
       />
       <Container fluid>
