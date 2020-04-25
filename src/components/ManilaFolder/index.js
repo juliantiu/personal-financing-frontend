@@ -62,7 +62,7 @@ export default function ManilaFolders() {
   const [transactions, setTransactions] = useState(initDataState);
   const [budgets, setBudgets] = useState(initDataState);
   const [categories, setCategories] = useState(initDataState);
-  const categoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${monthIndex}&uid=${currentUser.uid}`;
+  const categoriesUrl = `${hostname}${getCategoriesURI}?year=${year}&month=${monthIndex}&uid=${currentUser.uid}`;
 
   useEffect(
     () => {

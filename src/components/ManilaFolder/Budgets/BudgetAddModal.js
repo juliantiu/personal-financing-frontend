@@ -14,7 +14,7 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
   process.env.REACT_APP_API_PROD_URL
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
 const newCategoryURI = process.env.REACT_APP_API_NEWCATEGORY;
-const categoryURL = `${hostname}/${newCategoryURI}`;
+const categoryURL = `${hostname}${newCategoryURI}`;
 
 function getCategories(categoriesUrl, setCategories) {
   fetch(categoriesUrl, {
@@ -39,7 +39,7 @@ export default function BudgetModal(props) {
   const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState(''); // For the text input
   const { currentUser } = useContext(AuthContext);
-  const categoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const categoriesUrl = `${hostname}${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   const handleChange = (event) => {
     setCategoryName(event.target.value);

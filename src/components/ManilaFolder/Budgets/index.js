@@ -26,13 +26,13 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
   process.env.REACT_APP_API_PROD_URL
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const newSubcategoryURI = process.env.REACT_APP_API_NEWSUBCATEGORY;
-const newSubcategoryUrl = `${hostname}/${newSubcategoryURI}`;
+const newSubcategoryUrl = `${hostname}${newSubcategoryURI}`;
 const subcategoriesURI = process.env.REACT_APP_API_GETSUBCATEGORIES;
-const subcategoriesUrl = `${hostname}/${subcategoriesURI}`;
+const subcategoriesUrl = `${hostname}${subcategoriesURI}`;
 const deleteSubcategoryURI = process.env.REACT_APP_API_DELETESUBCATEGORY;
-const deleteSubcategoryUrl = `${hostname}/${deleteSubcategoryURI}`;
+const deleteSubcategoryUrl = `${hostname}${deleteSubcategoryURI}`;
 const updateSubcategoryURI = process.env.REACT_APP_API_UPDATESUBCATEGORY;
-const updateSubcategoryUrl = `${hostname}/${updateSubcategoryURI}`
+const updateSubcategoryUrl = `${hostname}${updateSubcategoryURI}`
 
 /************************************************************** HELPER FUNCTIONS */
 
@@ -182,7 +182,7 @@ export default function Budgets(props) {
     setCategories, 
     currentUser 
   } = props;
-  const transactionsUrl = `${hostname}/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `${hostname}${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
   const categoryIds_to_names = new Map();
   for (const category in categories) {
     categoryIds_to_names.set(categories[category].id, categories[category].category_name);

@@ -20,11 +20,11 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
   process.env.REACT_APP_API_PROD_URL
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const newTransactionURI = process.env.REACT_APP_API_NEWTRANSACTION;
-const newTransactionUrl = `${hostname}/${newTransactionURI}`
+const newTransactionUrl = `${hostname}${newTransactionURI}`
 const updateTransactionURI = process.env.REACT_APP_API_UPDATETRANSACTION;
-const updateTransactionURL = `${hostname}/${updateTransactionURI}`
+const updateTransactionURL = `${hostname}${updateTransactionURI}`
 const deleteTransactionURI = process.env.REACT_APP_API_DELETETRANSACTION;
-const deleteTransactionUrl = `${hostname}/${deleteTransactionURI}`
+const deleteTransactionUrl = `${hostname}${deleteTransactionURI}`
 
 /************************************************************** HELPER FUNCTIONS */
 
@@ -207,7 +207,7 @@ function editable(currentUser, setTransactions, transactionsUrl, month, year, tr
 
 export default function TransactionHistory(props) {
   const { month, year, transactions, categories, budgets, setTransactions, currentUser } = props;
-  const transactionsUrl = `${hostname}/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `${hostname}${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   useEffect(
     () => {

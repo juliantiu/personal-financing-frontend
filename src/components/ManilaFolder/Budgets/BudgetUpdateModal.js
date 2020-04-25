@@ -18,7 +18,7 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
 const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
 const updateCategoryURI = process.env.REACT_APP_API_UPDATECATEGORY;
-const updateCategoryUrl = `${hostname}/${updateCategoryURI}`;
+const updateCategoryUrl = `${hostname}${updateCategoryURI}`;
 
 function fetchRequest(url, setMethod) {
   fetch(url, {
@@ -44,8 +44,8 @@ export default function BudgetModal(props) {
   const [categoryId, setCategoryId] = useState(''); // For the select input
   const [newCategoryName, setNewCategoryName] = useState(''); // For the text input
   const { currentUser } = useContext(AuthContext);
-  const getCategoriesUrl = `${hostname}/${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
-  const transactionsUrl = `${hostname}/${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const getCategoriesUrl = `${hostname}${getCategoriesURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
+  const transactionsUrl = `${hostname}${getTransactionsURI}?year=${year}&month=${month}&uid=${currentUser.uid}`;
 
   const handleSelectChange = (event) => {
     setCategoryId(event.target.value);
