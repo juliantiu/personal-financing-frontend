@@ -5,7 +5,7 @@ const budgetBreakdownOptions = {
   chartArea: { top: 0, right: 0, bottom: 30, left: 0 },
   legend: 'bottom',
   is3D: true,
-  colors: ['#206140','#cccc00','#612021','#6666cc','#cc6699','#cc9966','#66cccc','#61a4b0','#cc6699','#cc6666']
+  colors: ['#80acaa','#fdd978','#605542','#6e2f3b','#2B211E','#52494C','#66cccc','#B9A167','#AF8561','#D3B69C']
 };
 
 function generateCategoriesLookupTable(categories) {

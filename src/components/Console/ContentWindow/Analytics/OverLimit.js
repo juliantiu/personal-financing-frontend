@@ -3,7 +3,7 @@ import { Chart } from 'react-google-charts';
 
 const overLimitOptions = {
   legend: 'top',
-  colors: ['#3f51b5', '#612021']
+  colors: ['#80acaa', '#6e2f3b']
 }
 
 function generateUniqueSubcategories(transactionsHistory) {
