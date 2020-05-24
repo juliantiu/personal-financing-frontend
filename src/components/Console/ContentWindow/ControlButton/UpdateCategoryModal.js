@@ -56,7 +56,8 @@ export default function BudgetModal(props) {
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
     }).catch(error => {
-      alert(error);
+      setIsLoading(false);
+      alert('Failed to delete budget category', error);
     })
   }
 

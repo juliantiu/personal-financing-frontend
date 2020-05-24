@@ -57,7 +57,10 @@ export default function BudgetModal(props) {
       getCategories(currentUser.uid, month, year)
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
-    })
+    }).catch(error => {
+      setIsLoading(false);
+      alert('Failed to add budget category', error);
+    });
   }
 
   return (

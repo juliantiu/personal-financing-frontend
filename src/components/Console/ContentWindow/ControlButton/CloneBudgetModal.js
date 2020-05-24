@@ -44,6 +44,9 @@ export default function CloneBudget(props) {
         },
         1000
       );
+    }).catch(error => {
+      setIsLoading(false);
+      alert('Failed to delete budget category', error);
     });
   }
 
