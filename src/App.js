@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import './App.css';
 
 import { AuthProvider } from './contexts/AuthState';
-import ManilaFolder from './components/ManilaFolder';
-import Login from './components/Login';
+import Console from './components/Console';
+import Access from './components/Access';
 
 import PrivateRoute from './HOCs/PrivateRoute';
 
@@ -13,8 +13,8 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <PrivateRoute exact path="/" component={ManilaFolder} />
-        <Route exact path="/login" component={Login} />
+        <PrivateRoute exact path="/" component={Console} />
+        <Route exact path="/Access" component={Access} />
       </Router>
     </AuthProvider>
   );
