@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 
 import Button from '@material-ui/core/Button';
@@ -26,6 +26,19 @@ export default function BudgetModal(props) {
   const [categoryId, setCategoryId] = useState(''); // For the select input
   const [newCategoryName, setNewCategoryName] = useState(''); // For the text input
 
+  const categoryLookup = useMemo(
+    () => {
+      return categories.reduce(
+        (lookup, category) => {
+          lookup.set(category.category_name, 1);
+          return lookup;
+        },
+        new Map()
+      );
+    },
+    [categories]
+  );
+
   const handleSelectChange = (event) => {
     setCategoryId(event.target.value);
   }
@@ -39,6 +52,8 @@ export default function BudgetModal(props) {
   };
 
   const handleClose = () => {
+    setCategoryId('');
+    setNewCategoryName('');
     setOpen(false);
   };
 
@@ -52,10 +67,14 @@ export default function BudgetModal(props) {
     updatedCategory.then(() => {
       setIsLoading(false);
       setOpen(false);
+      setCategoryId('');
+      setNewCategoryName('');
       getCategories(currentUser.uid, month, year);
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
     }).catch(error => {
+      setNewCategoryName('');
+      setCategoryId('');
       setIsLoading(false);
       alert('Failed to delete budget category', error);
     })
@@ -92,6 +111,8 @@ export default function BudgetModal(props) {
             label="New category name"
             type="name"
             onChange={handleNameChange}
+            error={categoryLookup.has(newCategoryName)}
+            helperText={categoryLookup.has(newCategoryName) ? 'Duplicate category name' : ''}
             fullWidth
           />
         </DialogContent>
@@ -99,7 +120,16 @@ export default function BudgetModal(props) {
           <Button onClick={handleClose} color="primary" disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary" disabled={isLoading || newCategoryName === '' || categoryId === ''}>
+          <Button
+            onClick={handleSubmit} 
+            color="primary" 
+            disabled={
+              isLoading || 
+              newCategoryName === '' ||
+              categoryId === '' || 
+              categoryLookup.has(newCategoryName)
+            }
+          >
             Submit
           </Button>
         </DialogActions>

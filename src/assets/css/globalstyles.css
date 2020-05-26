@@ -44,6 +44,10 @@ button:focus {
   background-color: black !important;
 }
 
+.MuiTabs-indicator {
+  background-color: black !important;
+}
+
 .MuiTypography-h5 {
   font-family: 'Lobster', cursive !important;
 }

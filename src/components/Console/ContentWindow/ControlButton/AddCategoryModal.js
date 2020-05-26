@@ -52,12 +52,14 @@ export default function BudgetModal(props) {
     setIsLoading(true);
     const newCategory = addCategory(currentUser, categoryName, month, year);
     newCategory.then(() => {
+      setCategoryName('');
       setIsLoading(false);
       setOpen(false);
       getCategories(currentUser.uid, month, year)
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
     }).catch(error => {
+      setCategoryName('');
       setIsLoading(false);
       alert('Failed to add budget category', error);
     });
@@ -71,48 +73,23 @@ export default function BudgetModal(props) {
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">NEW BUDGET CATEGORY</DialogTitle>
         <DialogContent>
-          {
-            categoryLookup.has(categoryName)
-            ? (
-              <TextField
-                error
-                margin="dense"
-                label="Invalid"
-                helperText="The name is already taken"
-                defaultValue={categoryName}
-                variant="filled"
-                onChange={handleChange}
-                fullWidth
-              />
-            )
-            : (
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Category name"
-                onChange={handleChange}
-                fullWidth
-              />
-            )
-          }
+          <TextField
+            error={categoryLookup.has(categoryName)}
+            helperText={categoryLookup.has(categoryName) ? 'Duplicate category name' : ''}
+            autoFocus
+            margin="dense"
+            label="Category name"
+            onChange={handleChange}
+            fullWidth
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" disabled={isLoading}>
             Cancel
           </Button>
-          {
-            categoryLookup.has(categoryName)
-            ? (
-              <Button onClick={handleSubmit} color="primary" disabled>
-                Submit
-              </Button>
-            ) 
-            : (
-              <Button onClick={handleSubmit} color="primary" disabled={isLoading || categoryName === ''}>
-                Submit
-              </Button>
-            )
-          }
+          <Button onClick={handleSubmit} color="primary" disabled={isLoading || categoryName === '' || categoryLookup.has(categoryName)}>
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

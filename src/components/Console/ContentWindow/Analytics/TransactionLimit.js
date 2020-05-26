@@ -49,9 +49,9 @@ export default function TransactionLimit(props) {
         minorTicks: 5,
         min: 0,
         max: limit,
-        greenColor: '#206140',
-        orangeColor: '#cccc00',
-        redColor: '#612021'
+        greenColor: '#6E8363',
+        orangeColor: '#CE9960',
+        redColor: '#A34730'
       };
     },
     [budget]

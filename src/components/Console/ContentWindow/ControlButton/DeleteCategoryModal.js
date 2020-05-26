@@ -36,10 +36,10 @@ export default function BudgetModal(props) {
   };
 
   const handleSubmit = () => {
-    setIsLoading(false);
+    setIsLoading(true);
     const deletedCategory = deleteCategory(categoryId);
     deletedCategory.then(() => {
-      setIsLoading(true);
+      setIsLoading(false);
       setOpen(false);
       // categoryId is reset b/c on the next render, 
       // value of Select component will try to map
