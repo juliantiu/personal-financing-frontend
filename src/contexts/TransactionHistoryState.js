@@ -88,7 +88,7 @@ export const TransactionHistoryProvider = ({ children }) => {
       })
     }
 
-    function updateTransaction(oldData, newData, currentUser) {
+    function updateTransaction(oldData, newData, currentUser, month, year) {
       return fetch((`${updateTransactionURL}/${oldData.id}`), {
         method: 'PUT',
         mode: 'cors',
@@ -102,7 +102,9 @@ export const TransactionHistoryProvider = ({ children }) => {
           cost: newData.cost,
           subcategory_id: newData.subcategory_id,
           description: newData.description,
-          date: newData.date
+          date: newData.date,
+          month,
+          year
         })
       })
     }

@@ -91,7 +91,7 @@ function editable(
       });
     }),
     onRowUpdate: (newData, oldData) => new Promise((resolve,reject) => {
-      const updatedTransaction = updateTransaction(oldData, newData, currentUser);
+      const updatedTransaction = updateTransaction(oldData, newData, currentUser, month, year);
       updatedTransaction.then((response) => {
         return response.json();
       })

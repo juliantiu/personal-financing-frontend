@@ -3,15 +3,21 @@ import { Chart } from 'react-google-charts';
 
 const overLimitOptions = {
   explorer: {
-    axis: 'horizontal',
-    actions: ['dragToZoom', 'rightClickToReset']
+    axis: 'vertical',
+    actions: ['dragToZoom', 'rightClickToReset'],
+    keepInBounds: true,
+    maxZoomIn: 4.0
+  },
+  chartArea: {
+    top: 100,
+    bottom: 200
   },
   hAxis: {
     slantedText: true,
-    slantedTextAngle: 90
+    slantedTextAngle: 90,
   },
   legend: 'top',
-  height: 600,
+  height: 800,
   colors: ['#35727B', '#A34730']
 }
 
