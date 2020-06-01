@@ -68,7 +68,7 @@ export const TransactionHistoryProvider = ({ children }) => {
       });
     }
 
-    function addTransaction(newData, currentUser) {
+    function addTransaction(newData, currentUser, month, year) {
       return fetch(newTransactionURL, {
         method: 'POST',
         mode: 'cors',
@@ -81,7 +81,9 @@ export const TransactionHistoryProvider = ({ children }) => {
           uid: currentUser.uid,
           cost: newData.cost,
           subcategory_id: newData.subcategory_id,
-          date: newData.date
+          date: newData.date,
+          month,
+          year
         })
       })
     }

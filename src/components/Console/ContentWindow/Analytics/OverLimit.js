@@ -2,7 +2,16 @@ import React, { useMemo } from 'react';
 import { Chart } from 'react-google-charts';
 
 const overLimitOptions = {
+  explorer: {
+    axis: 'horizontal',
+    actions: ['dragToZoom', 'rightClickToReset']
+  },
+  hAxis: {
+    slantedText: true,
+    slantedTextAngle: 90
+  },
   legend: 'top',
+  height: 600,
   colors: ['#35727B', '#A34730']
 }
 

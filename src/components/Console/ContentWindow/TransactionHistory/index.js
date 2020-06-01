@@ -76,7 +76,7 @@ function editable(
   year) {
   return {
     onRowAdd: newData => new Promise((resolve, reject) => {
-      const newTransaction = addTransaction(newData, currentUser);
+      const newTransaction = addTransaction(newData, currentUser, month, year);
       newTransaction.then((response) => {
         return response.json();
       })

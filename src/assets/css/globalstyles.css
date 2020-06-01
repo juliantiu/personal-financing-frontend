@@ -12,6 +12,16 @@ button:focus {
 
 /* MUI-stuff */
 
+.MuiPickersToolbar-toolbar {
+  background-color: black !important;
+  color: white !important;
+}
+
+.MuiPickersDay-daySelected {
+  background-color: black !important;
+  color: white !important;
+}
+
 .MuiFormLabel-root.Mui-focused {
   color: black !important;
 }
