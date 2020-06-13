@@ -10,11 +10,17 @@ const overLimitOptions = {
   },
   chartArea: {
     top: 100,
-    bottom: 200
+    bottom: 200,
+    left: 100,
+    right: 20
   },
   hAxis: {
     slantedText: true,
     slantedTextAngle: 90,
+    
+  },
+  vAxis: {
+    format: 'currency'
   },
   legend: 'top',
   height: 800,

@@ -25,7 +25,7 @@ export default function DetailPanel(props){
     const categoriesList = categories.map(category => category.id);
     const oldData = { id };
     const newData = { subcategory_id, cost, date, description: value };
-    const updatedTransaction = updateTransaction(oldData, newData, currentUser);
+    const updatedTransaction = updateTransaction(oldData, newData, currentUser, month, year);
     updatedTransaction.then(() => {
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
