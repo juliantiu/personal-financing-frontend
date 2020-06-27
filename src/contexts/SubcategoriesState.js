@@ -15,15 +15,13 @@ const newSubcategoryURL = `${hostname}/${newSubcategoryURI}`;
 const updateSubcategoryURL = `${hostname}/${updateSubcategoryURI}`;
 const deleteSubcategoryURL = `${hostname}/${deleteSubcategoryURI}`;
 
-// initial state of subcategories and subcategories
-const initialSubcategoriesState = [];
 
 // creating the context
-export const SubcategoriesContext = createContext(initialSubcategoriesState);
+export const SubcategoriesContext = createContext(undefined);
 
 // provider component
 export const SubcategoriesProvider = ({ children }) => {
-  const [subcategories, setSubcategories] = useState(initialSubcategoriesState);
+  const [subcategories, setSubcategories] = useState(undefined);
 
   // START actions
   function getSubcategories(categories) {

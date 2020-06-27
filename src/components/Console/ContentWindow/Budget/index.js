@@ -174,8 +174,8 @@ export default function Budget(props) {
   );
 
   return (
-    <React.Fragment>
+    <div className="tables-container">
       {tables}
-    </React.Fragment> 
+    </div> 
   );
 }

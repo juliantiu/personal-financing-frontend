@@ -36,10 +36,10 @@ const deleteTransactionURL = `${hostname}/${deleteTransactionURI}`
 // }
 
 // initial state of the transaction history
-const initialTransactionHistoryState = [];
+// const initialTransactionHistoryState = [];
 
-// creating the context
-export const TransactionHistoryContext = createContext(initialTransactionHistoryState);
+// creating the context, value inside param used to be initialTransactionHistoryState
+export const TransactionHistoryContext = createContext(undefined);
 
 // provider component
 export const TransactionHistoryProvider = ({ children }) => {
@@ -47,7 +47,7 @@ export const TransactionHistoryProvider = ({ children }) => {
   // Is the AuthProvider actually in scope becuase the usage of this
   // is within the <ContentWindow /> component?
   // const { currentUser } = useContext(AuthContext);
-  const [transactionsHistory, setTransactionsHistory] = useState(initialTransactionHistoryState);
+  const [transactionsHistory, setTransactionsHistory] = useState(undefined);
 
     // START actions
     function getTransactions(uid, month, year) {

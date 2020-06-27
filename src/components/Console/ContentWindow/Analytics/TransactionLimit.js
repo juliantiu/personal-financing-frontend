@@ -51,7 +51,8 @@ export default function TransactionLimit(props) {
         max: limit,
         greenColor: '#6E8363',
         orangeColor: '#CE9960',
-        redColor: '#A34730'
+        redColor: '#A34730',
+        chartArea: { top: 0, right: 0, bottom: 30, left: 0 }
       };
     },
     [budget]

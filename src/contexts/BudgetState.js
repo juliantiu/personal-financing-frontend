@@ -8,15 +8,12 @@ const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 const getBudgetURI = process.env.REACT_APP_API_GETBUDGET;
 const cloneBudgetURI = process.env.REACT_APP_API_CLONEBUDGET;
 
-// initial state of the budget
-const initialbudgetState = [];
-
 // creating the context
-export const BudgetContext = createContext(initialbudgetState);
+export const BudgetContext = createContext(undefined);
 
 // provider component
 export const BudgetProvider = ({ children }) => {
-  const [budget, setBudget] = useState(initialbudgetState);
+  const [budget, setBudget] = useState(undefined);
 
     // START actions
     function getBudget(uid, month, year) {

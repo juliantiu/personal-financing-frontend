@@ -200,21 +200,23 @@ export default function TransactionHistory(props) {
   );
 
   return (
-    <MaterialTable
-      data={transactionsHistory}
-      columns={columns}
-      options={options}
-      detailPanel={rowData => detailPanel(rowData, currentUser, month, year)}
-      editable={editable(
-        getBudget,
-        getTransactions,
-        addTransaction,
-        updateTransaction,
-        deleteTransaction,
-        currentUser,
-        month,
-        year
-      )}
-    />
+    <div className="tables-container">
+      <MaterialTable
+        data={transactionsHistory}
+        columns={columns}
+        options={options}
+        detailPanel={rowData => detailPanel(rowData, currentUser, month, year)}
+        editable={editable(
+          getBudget,
+          getTransactions,
+          addTransaction,
+          updateTransaction,
+          deleteTransaction,
+          currentUser,
+          month,
+          year
+        )}
+      />
+    </div>
   );
 }

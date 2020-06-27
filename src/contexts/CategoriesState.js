@@ -15,15 +15,12 @@ const newCategoryURL = `${hostname}/${newCategoryURI}`;
 const updateCategoryURL = `${hostname}/${updateCategoryURI}`;
 const deleteCategoryURL = `${hostname}/${deleteCategoryURI}`;
 
-// initial state of categories
-const initialCategoriesState = [];
-
 // creating the context
-export const CategoriesContext = createContext(initialCategoriesState);
+export const CategoriesContext = createContext(undefined);
 
 // provider component
 export const CategoriesProvider = ({ children }) => {
-  const [categories, setCategories] = useState(initialCategoriesState);
+  const [categories, setCategories] = useState(undefined);
 
     // START actions
     function addCategory(currentUser, categoryName, month, year) {

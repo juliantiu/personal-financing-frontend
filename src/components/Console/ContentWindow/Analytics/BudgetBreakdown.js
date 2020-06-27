@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Chart } from 'react-google-charts';
 
 const budgetBreakdownOptions = {
-  chartArea: { top: 0, right: 0, bottom: 30, left: 0 },
+  chartArea: { top: 0, right: 10, bottom: 20, left: 5 },
   legend: 'bottom',
   is3D: true,
   colors: ['#CEB793','#85865F','#8A584C','#8FA6AC','#4F583D','#F5EACF','#A34730','#CE9960','#E2DAC3','#BE7151']
@@ -51,7 +51,7 @@ export default function BudgetBreakdown(props) {
     <div className="chart-container">
       <Chart 
         chartType="PieChart"
-        width={'496px'}
+        width="100%"
         height={'300px'}
         data={budgetBreakdownData.length > 1 ? budgetBreakdownData : [['Budget Category', 'Amount'], ['', 0]]}
         options={budgetBreakdownOptions}

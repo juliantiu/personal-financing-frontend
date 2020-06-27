@@ -296,3 +296,9 @@ button:focus {
   align-items: center;
   justify-content: center;
 }
+
+@media only screen and (max-width: 600px) {
+  .tables-container {
+    width: calc(100vw - 32px);
+  }
+}

@@ -30,10 +30,10 @@ export default function ContentWindow(props) {
   const classes = useStyles();
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
-  const { setBudget } = useContext(BudgetContext);
+  const { setBudget, budget } = useContext(BudgetContext);
   const { categories, setCategories } = useContext(CategoriesContext);
-  const { setSubcategories } = useContext(SubcategoriesContext);
-  const { setTransactionsHistory } = useContext(TransactionHistoryContext);
+  const { setSubcategories, subcategories } = useContext(SubcategoriesContext);
+  const { setTransactionsHistory, transactionsHistory } = useContext(TransactionHistoryContext);
 
   useEffect(
     () => {
@@ -91,6 +91,7 @@ export default function ContentWindow(props) {
 
   useEffect(
     () => {
+      if (categories === undefined) return;
       const categoriesList = categories.map(category => category.id);
       fetch(`${hostname}/${getSubcategoriesURI}`, {
         method: 'POST', 
@@ -131,6 +132,19 @@ export default function ContentWindow(props) {
     },
     [setTransactionsHistory, currentUser, month, year]
   );
+
+  if (budget === undefined || categories === undefined || subcategories === undefined || transactionsHistory === undefined) {
+    return (
+      <>
+        <div id="top" className={classes.toolbar}/>
+        <Grid container className={classes.contentWindowContainer}>
+          <Grid item xs={12}>
+            <Typography variant="h2" gutterBottom>Loading...</Typography>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
 
   return (
     <>
