@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Chart } from 'react-google-charts';
 
-const overLimitOptions = {
+const overLimitDesktopOptions = {
   explorer: {
     axis: 'vertical',
     actions: ['dragToZoom', 'rightClickToReset'],
@@ -86,12 +86,54 @@ export default function OverLimit(props) {
     [budget, transactionsHistory]
   );
 
+  const overLimitMobileOptions = useMemo(
+    () => {
+      return {
+        chartArea: {
+          top: 50,
+          bottom: 50,
+          left: 100,
+          right: 30
+        },
+        height: overLimitData.length * 90,
+        explorer: {
+          axis: 'horizontal',
+          actions: ['dragToZoom', 'rightClickToReset'],
+          keepInBounds: true,
+          maxZoomIn: 4.0
+        },
+        hAxis: {
+          slantedText: false,
+          
+        },
+        vAxis: {
+          format: 'currency'
+        },
+        legend: 'top',
+        colors: ['#35727B', '#A34730']
+      }
+    },
+    [overLimitData]
+  );
+
   return (
-    <Chart
-      chartType="ColumnChart"
-      data={overLimitData.length > 1 ? overLimitData : [['Subcategory', 'Allotment', 'Spent'], [0,0,0]]}
-      loader={<div>Loading Subcategory Limits...</div>}
-      options={overLimitOptions}
-    />
+    <>
+      <div className="hidden-mobile">
+        <Chart
+          chartType="ColumnChart"
+          data={overLimitData.length > 1 ? overLimitData : [['Subcategory', 'Allotment', 'Spent'], [0,0,0]]}
+          loader={<div>Loading Subcategory Limits...</div>}
+          options={overLimitDesktopOptions}
+        />
+      </div>
+      <div className="hidden-desktop">
+        <Chart
+          chartType="BarChart"
+          data={overLimitData.length > 1 ? overLimitData : [['Subcategory', 'Allotment', 'Spent'], [0,0,0]]}
+          loader={<div>Loading Subcategory Limits...</div>}
+          options={overLimitMobileOptions}
+        />
+      </div>
+    </>
   );
 }
