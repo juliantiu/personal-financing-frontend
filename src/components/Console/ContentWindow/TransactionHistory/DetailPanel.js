@@ -8,7 +8,7 @@ import { TransactionHistoryContext } from '../../../../contexts/TransactionHisto
 import { BudgetContext } from '../../../../contexts/BudgetState';
 
 export default function DetailPanel(props){
-  const { currentUser, month, year } = props;
+  const { currentUser, month, year, setIsLoading } = props;
   const { description, id, subcategory_id, cost, date } = props.rowData;
   const { getBudget } = useContext(BudgetContext);
   const { getTransactions, updateTransaction } = useContext(TransactionHistoryContext);
@@ -22,6 +22,7 @@ export default function DetailPanel(props){
 
   const submit = (event) => {
     event.preventDefault();
+    setIsLoading(true);
     const categoriesList = categories.map(category => category.id);
     const oldData = { id };
     const newData = { subcategory_id, cost, date, description: value };
@@ -30,8 +31,10 @@ export default function DetailPanel(props){
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
       getSubcategories(categoriesList);
+      setIsLoading(false);
     }).catch(error => {
       alert('Failed to update transaction', error);
+      setIsLoading(false);
     });
   }
 
@@ -48,9 +51,6 @@ export default function DetailPanel(props){
             fullWidth
           />
         </form> 
-        {/* <div className="update-button-container">
-          <button onClick={submit} className="update-button"><CheckIcon fontSize="large"/></button>
-        </div> */}
       </Grid>
     </Grid>
   );

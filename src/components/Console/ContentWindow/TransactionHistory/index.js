@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import MaterialTable from 'material-table';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -123,18 +123,20 @@ function editable(
   }
 }
 
-function detailPanel(rowData, currentUser, month, year) {
+function detailPanel(rowData, currentUser, month, year, setIsLoading) {
   return (
     <DetailPanel 
       rowData={rowData} 
       currentUser={currentUser}
       month={month}
       year={year}
+      setIsLoading={setIsLoading}
     />
   );
 }
 
 export default function TransactionHistory(props) {
+  const [isLoading, setIsLoading] = useState(false);
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
   const { getBudget } = useContext(BudgetContext);
@@ -205,7 +207,8 @@ export default function TransactionHistory(props) {
         data={transactionsHistory}
         columns={columns}
         options={options}
-        detailPanel={rowData => detailPanel(rowData, currentUser, month, year)}
+        isLoading={isLoading}
+        detailPanel={rowData => detailPanel(rowData, currentUser, month, year, setIsLoading)}
         editable={editable(
           getBudget,
           getTransactions,
