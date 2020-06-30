@@ -28,7 +28,7 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage) {
   const subcategoriesLookupTable = generateSubcategoriesLookupTable(budget);
   // unique subcategories within transaction, not budget
   const uniqueSubcategories = generateUniqueSubcategories(transactionsHistory);
-  const budgetSubcategoriesLookup = new Map();
+  let budgetSubcategoriesLookup = new Map();
   const transacSubcategoriesLookup = new Map();
   let max = 0;
 
@@ -39,6 +39,8 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage) {
       transacSubcategoriesLookup.set(subcategory.subcategory_name, 0);
     }
   }
+  
+  budgetSubcategoriesLookup = new Map([...budgetSubcategoriesLookup].sort((a, b) => a[0] > b[0] ? 1 : -1));
 
   for (const subcategory of uniqueSubcategories) {
     const filteredTransactions = transactionsHistory.filter(
@@ -53,8 +55,7 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage) {
   }
 
   const overLimit = [['Subcategory', 'Allotment', 'Spent']];
-  console.log(max, selectedPercentage);
-  console.log(max * selectedPercentage);
+
   for (const [key, value] of budgetSubcategoriesLookup) {
     if (value <= (max * selectedPercentage)) {
       overLimit.push([key, value, transacSubcategoriesLookup.get(key)]);
@@ -103,18 +104,19 @@ export default function OverLimit(props) {
           maxZoomIn: 4.0
         },
         chartArea: {
-          top: 100,
+          top: responsiveWidth > 768 ? 50 : 30,
           bottom: responsiveWidth > 768 ? 200 : 20,
           left: 100,
-          right: responsiveWidth > 768 ? 20 : 30
+          right: responsiveWidth > 768 ? 20 : 40
         },
         hAxis: {
-          slantedText: responsiveWidth > 769 ? true : false,
+          slantedText: responsiveWidth > 768 ? true : false,
           slantedTextAngle: 90,
+          format: responsiveWidth > 768 ? '' : 'currency'
           
         },
         vAxis: {
-          format: 'currency'
+          format: responsiveWidth > 768 ? 'currency' : ''
         },
         legend: 'top',
         height: 800,
@@ -128,7 +130,7 @@ export default function OverLimit(props) {
   return (
     <div ref={divRef}>
       <Grid container>
-        <Grid item xs={4} className={classes.filterSelectContainer}>
+        <Grid item xs={responsiveWidth > 768 ? 4 : 12} className={classes.filterSelectContainer}>
           <FormControl fullWidth>
             <InputLabel>Filter</InputLabel>
             <Select
