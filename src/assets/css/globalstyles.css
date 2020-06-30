@@ -297,23 +297,7 @@ button:focus {
   justify-content: center;
 }
 
-.hidden-mobile {
-  display: block;
-}
-
-.hidden-desktop {
-  display: none;
-}
-
 @media only screen and (max-width: 768px) {
-  .hidden-mobile {
-    display: none;
-  }
-
-  .hidden-desktop {
-    display: block;
-  }
-
   .tables-container {
     width: calc(100vw - 32px);
   }

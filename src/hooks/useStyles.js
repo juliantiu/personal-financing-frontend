@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
   contentWindowContainer: {
     padding: theme.spacing(2),
   },
+  filterSelectContainer: {
+    padding: theme.spacing(3),
+  },
   bottomAppBar: {
     backgroundColor: 'transparent',
     top: 'auto',
