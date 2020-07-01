@@ -53,7 +53,7 @@ export const CategoriesProvider = ({ children }) => {
         }).then(data => {
           setCategories(data);
         }).catch(error => {
-          alert(error);
+          console.warn('Failed to get categories:', error);
         });
       },
       [setCategories]

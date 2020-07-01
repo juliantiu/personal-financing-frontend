@@ -158,9 +158,7 @@ export default function TransactionHistory(props) {
           [category.id]: category.category_name
         }), { }
       );
-
-      console.log(subcategories);
-
+      
       const subcategoryLookup = subcategories.reduce(
         (lookup, subcategory) => ({
           ...lookup,

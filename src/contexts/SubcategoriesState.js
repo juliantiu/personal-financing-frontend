@@ -42,7 +42,7 @@ export const SubcategoriesProvider = ({ children }) => {
       }).then(data => {
         setSubcategories(data);
       }).catch(error => {
-        alert(error);
+        console.warn('Failed to get subcategories:', error);
       });
     },
     [setSubcategories]
