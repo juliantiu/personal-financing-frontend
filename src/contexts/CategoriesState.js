@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 
 // URI's
 const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
@@ -41,20 +41,23 @@ export const CategoriesProvider = ({ children }) => {
       });
     }
 
-    function getCategories(uid, month, year) {
-      fetch(`${hostname}/${getCategoriesURI}/?year=${year}&month=${month}&uid=${uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      }).then(resp => { 
-        return resp.json(); 
-      }).then(data => {
-        setCategories(data);
-      }).catch(error => {
-        alert(error);
-      });
-    }
+    const getCategories = useCallback(
+      (uid, month, year) => {
+        fetch(`${hostname}/${getCategoriesURI}/?year=${year}&month=${month}&uid=${uid}`, {
+          method: 'GET', 
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+        }).then(resp => { 
+          return resp.json(); 
+        }).then(data => {
+          setCategories(data);
+        }).catch(error => {
+          alert(error);
+        });
+      },
+      [setCategories]
+    );
 
     function updateCategory(uid, categoryId, newCategoryName, month, year) {
       return fetch((updateCategoryURL + `/${categoryId}`), {

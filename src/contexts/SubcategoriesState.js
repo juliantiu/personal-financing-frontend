@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 
 // URI's
 const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
@@ -24,26 +24,29 @@ export const SubcategoriesProvider = ({ children }) => {
   const [subcategories, setSubcategories] = useState(undefined);
 
   // START actions
-  function getSubcategories(categories) {
-    return fetch(`${hostname}/${getSubcategoriesURI}`, {
-      method: 'POST', 
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials:'same-origin',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        categories
-      })
-    }).then(resp => { 
-      return resp.json(); 
-    }).then(data => {
-      setSubcategories(data);
-    }).catch(error => {
-      alert(error);
-    });
-  }
+  const getSubcategories = useCallback(
+    (categories) => {
+      return fetch(`${hostname}/${getSubcategoriesURI}`, {
+        method: 'POST', 
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials:'same-origin',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          categories
+        })
+      }).then(resp => { 
+        return resp.json(); 
+      }).then(data => {
+        setSubcategories(data);
+      }).catch(error => {
+        alert(error);
+      });
+    },
+    [setSubcategories]
+  );
 
   function addSubcategory(rowData, newData) {
     return fetch(newSubcategoryURL, {

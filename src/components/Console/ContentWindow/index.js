@@ -17,120 +17,43 @@ import { SubcategoriesContext } from '../../../contexts/SubcategoriesState';
 
 import useStyles from '../../../hooks/useStyles';
 
-const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
-  process.env.REACT_APP_API_DEV_URL :
-  process.env.REACT_APP_API_PROD_URL;
-
-const getBudgetURI = process.env.REACT_APP_API_GETBUDGET;
-const getCategoriesURI = process.env.REACT_APP_API_GETCATEGORIES;
-const getSubcategoriesURI = process.env.REACT_APP_API_GETSUBCATEGORIES;
-const getTransactionsURI = process.env.REACT_APP_API_GETTRANSACTIONS;
-
 export default function ContentWindow(props) {
   const classes = useStyles();
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
-  const { setBudget, budget } = useContext(BudgetContext);
-  const { categories, setCategories } = useContext(CategoriesContext);
-  const { setSubcategories, subcategories } = useContext(SubcategoriesContext);
-  const { setTransactionsHistory, transactionsHistory } = useContext(TransactionHistoryContext);
+  const { getBudget, budget } = useContext(BudgetContext);
+  const { getCategories, categories } = useContext(CategoriesContext);
+  const { getSubcategories, subcategories } = useContext(SubcategoriesContext);
+  const { getTransactions, transactionsHistory } = useContext(TransactionHistoryContext);
 
   useEffect(
     () => {
-      fetch(`${hostname}/${getBudgetURI}/?year=${year}&month=${month}&uid=${currentUser.uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      }).then(resp => { 
-        return resp.json(); 
-      }).then(data => {
-        setBudget(data);
-      }).catch(error => {
-        alert(error);
-      });
+      getBudget(currentUser.uid, month, year);
     },
-    [setBudget, currentUser, month, year]
+    [getBudget, currentUser, month, year]
   );
 
   useEffect(
     () => {
-      fetch(`${hostname}/${getCategoriesURI}/?year=${year}&month=${month}&uid=${currentUser.uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      }).then(resp => { 
-        return resp.json(); 
-      }).then(data => {
-        setCategories(data);
-      }).catch(error => {
-        alert(error);
-      });
+      getCategories(currentUser.uid, month, year);
     },
-    [setCategories, currentUser, month, year]
-  );
-
-  useEffect(
-    () => {
-      fetch(`${hostname}/${getCategoriesURI}/?year=${year}&month=${month}&uid=${currentUser.uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      }).then(resp => { 
-        return resp.json(); 
-      }).then(data => {
-        setCategories(data);
-      }).catch(error => {
-        alert(error);
-      });
-    },
-    [setCategories, currentUser, month, year]
+    [getCategories, currentUser, month, year]
   );
 
   useEffect(
     () => {
       if (categories === undefined) return;
       const categoriesList = categories.map(category => category.id);
-      fetch(`${hostname}/${getSubcategoriesURI}`, {
-        method: 'POST', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          categories: categoriesList
-        })
-      }).then(resp => { 
-        return resp.json(); 
-      }).then(data => {
-        setSubcategories(data);
-      }).catch(error => {
-        alert(error);
-      });
+      getSubcategories(categoriesList);
     },
-    [categories, setSubcategories]
+    [getSubcategories, categories]
   );
 
   useEffect(
     () => {
-      fetch(`${hostname}/${getTransactionsURI}/?year=${year}&month=${month}&uid=${currentUser.uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      }).then(resp => { 
-        return resp.json(); 
-      }).then(data => {
-        setTransactionsHistory(data);
-      }).catch(error => {
-        alert(error);
-      });
+      getTransactions(currentUser.uid, month, year);
     },
-    [setTransactionsHistory, currentUser, month, year]
+    [getTransactions, currentUser, month, year]
   );
 
   if (budget === undefined || categories === undefined || subcategories === undefined || transactionsHistory === undefined) {

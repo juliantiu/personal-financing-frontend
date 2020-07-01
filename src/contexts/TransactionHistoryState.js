@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 // import { AuthContext } from './AuthState';
 
 // URI's
@@ -50,23 +50,26 @@ export const TransactionHistoryProvider = ({ children }) => {
   const [transactionsHistory, setTransactionsHistory] = useState(undefined);
 
     // START actions
-    function getTransactions(uid, month, year) {
-      fetch(`${hostname}/${getTransactionsURI}/?year=${year}&month=${month}&uid=${uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setTransactionsHistory(data);
-      })
-      .catch(error => {
-        console.log('Failed to get transaction history:', error);
-      });
-    }
+    const getTransactions = useCallback(
+      (uid, month, year) => {
+        fetch(`${hostname}/${getTransactionsURI}/?year=${year}&month=${month}&uid=${uid}`, {
+          method: 'GET', 
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setTransactionsHistory(data);
+        })
+        .catch(error => {
+          console.warn('Failed to get transaction history:', error);
+        });
+      },
+      [setTransactionsHistory]
+    );
 
     function addTransaction(newData, currentUser, month, year) {
       return fetch(newTransactionURL, {

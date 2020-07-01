@@ -1,4 +1,4 @@
-import React, { createContext, useState} from 'react';
+import React, { createContext, useState, useCallback} from 'react';
 
 // URI's
 const hostname = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
@@ -16,32 +16,35 @@ export const BudgetProvider = ({ children }) => {
   const [budget, setBudget] = useState(undefined);
 
     // START actions
-    function getBudget(uid, month, year) {
-      return fetch(`${hostname}/${getBudgetURI}/?year=${year}&month=${month}&uid=${uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setBudget(data);
-      })
-      .catch(error => {
-        console.log('Failed to get budget:', error);
-      });
-    }
+    const getBudget = useCallback(
+      (uid, month, year) => {
+        return fetch(`${hostname}/${getBudgetURI}/?year=${year}&month=${month}&uid=${uid}`, {
+          method: 'GET', 
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+        }).then((response) => {
+          return response.json();
+        }).then((data) => {
+          setBudget(data);
+        }).catch(error => {
+          console.warn('Failed to get budget:', error);
+        });
+      },
+      [setBudget]
+    );
 
-    function cloneBudget(uid, month, year) {
-      return fetch(`${hostname}/${cloneBudgetURI}/?year=${year}&month=${month}&uid=${uid}`, {
-        method: 'GET', 
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      });
-    }
+    const cloneBudget = useCallback(
+      (uid, month, year) => {
+        return fetch(`${hostname}/${cloneBudgetURI}/?year=${year}&month=${month}&uid=${uid}`, {
+          method: 'GET', 
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+        });
+      },
+      []
+    );
     // END actions
 
   return (
