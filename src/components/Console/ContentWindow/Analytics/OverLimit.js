@@ -192,8 +192,8 @@ export default function OverLimit(props) {
               onChange={handleSortChange}
             >
               <MenuItem value={0}>Alphabetical</MenuItem>
-              <MenuItem value={1}>Most expensive to least expensive</MenuItem>
-              <MenuItem value={2}>Lest expensive to most expensive</MenuItem>
+              <MenuItem value={1}>Greatest to least</MenuItem>
+              <MenuItem value={2}>Least to greatest</MenuItem>
             </Select>
           </FormControl>
         </Grid>
