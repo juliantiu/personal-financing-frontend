@@ -34,7 +34,7 @@ export default function TransactionLimit(props) {
     () => {
       const threshold = calculateThreshold(budget);
       const subThreshold = threshold - (threshold * .20);
-      const limit = threshold + (threshold * .10);
+      const limit = (+(threshold + (threshold * .10))).toFixed(2);
 
       if (threshold === 0) return { height: 300 };
 
