@@ -21,75 +21,92 @@ export const CategoriesContext = createContext(undefined);
 // provider component
 export const CategoriesProvider = ({ children }) => {
   const [categories, setCategories] = useState(undefined);
+  const [categoriesIsLoading, setCategoriesIsLoading] = useState(false);
+  const [categoriesError, setCategoriesError] = useState(true);
 
     // START actions
-    function addCategory(currentUser, categoryName, month, year) {
-      return fetch(newCategoryURL, {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: currentUser.uid,
-          category_name: categoryName,
-          month: month,
-          year: year
-        })
-      });
-    }
+    const addCategory = useCallback(
+      (currentUser, categoryName, month, year) => {
+        return fetch(newCategoryURL, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: currentUser.uid,
+            category_name: categoryName,
+            month: month,
+            year: year
+          })
+        });
+      },
+      []
+    );
 
     const getCategories = useCallback(
       (uid, month, year) => {
+        setCategoriesIsLoading(true);
         fetch(`${hostname}/${getCategoriesURI}/?year=${year}&month=${month}&uid=${uid}`, {
           method: 'GET', 
           mode: 'cors',
           cache: 'no-cache',
           credentials:'same-origin',
-        }).then(resp => { 
+        }).then(resp => {
           return resp.json(); 
         }).then(data => {
           setCategories(data);
+          setCategoriesIsLoading(false);
         }).catch(error => {
+          setCategoriesIsLoading(false);
+          setCategoriesError(true);
           console.warn('Failed to get categories:', error);
         });
       },
-      [setCategories]
+      [setCategories, setCategoriesIsLoading, setCategoriesError]
     );
 
-    function updateCategory(uid, categoryId, newCategoryName, month, year) {
-      return fetch((updateCategoryURL + `/${categoryId}`), {
-        method: 'PUT',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          month,
-          year,
-          uid,
-          category_name: newCategoryName,
-        })
-      });
-    }
+    const updateCategory = useCallback(
+      (uid, categoryId, newCategoryName, month, year) => {
+        return fetch((updateCategoryURL + `/${categoryId}`), {
+          method: 'PUT',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            month,
+            year,
+            uid,
+            category_name: newCategoryName,
+          })
+        });
+      },
+      []
+    );
 
-    function deleteCategory(categoryId) {
-      return fetch((deleteCategoryURL + `/${categoryId}`), {
-        method: 'delete',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      })
-    }
+    const deleteCategory = useCallback(
+      (categoryId) => {
+        return fetch((deleteCategoryURL + `/${categoryId}`), {
+          method: 'delete',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+        })
+      },
+      []
+    );
     // END actions
 
   return (
     <CategoriesContext.Provider value={
       {
+        categoriesIsLoading,
+        categoriesError,
         categories,
         addCategory,
         updateCategory,

@@ -21,10 +21,10 @@ export default function ContentWindow(props) {
   const classes = useStyles();
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
-  const { getBudget, budget } = useContext(BudgetContext);
-  const { getCategories, categories } = useContext(CategoriesContext);
-  const { getSubcategories, subcategories } = useContext(SubcategoriesContext);
-  const { getTransactions, transactionsHistory } = useContext(TransactionHistoryContext);
+  const { getBudget, budget, budgetIsLoading, budgetError } = useContext(BudgetContext);
+  const { getCategories, categories, categoriesIsLoading, categoriesError } = useContext(CategoriesContext);
+  const { getSubcategories, subcategories, subcategoriesIsLoading, subcategoriesError } = useContext(SubcategoriesContext);
+  const { getTransactions, transactionsHistory, transactionsHistoryIsLoading, transactionsHistoryError } = useContext(TransactionHistoryContext);
 
   useEffect(
     () => {
@@ -56,7 +56,23 @@ export default function ContentWindow(props) {
     [getTransactions, currentUser, month, year]
   );
 
-  if (budget === undefined || categories === undefined || subcategories === undefined || transactionsHistory === undefined) {
+  if (transactionsHistoryError || categoriesError || subcategoriesError || budgetError) {
+    return (
+      <>
+        <div id="top" className={classes.toolbar}/>
+        <Grid container className={classes.contentWindowContainer}>
+          <Grid item xs={12}>
+            <Typography variant="h2" gutterBottom>Error!</Typography>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
+
+  if (
+    budget === undefined || categories === undefined || subcategories === undefined || transactionsHistory === undefined ||
+    budgetIsLoading || categoriesIsLoading || subcategoriesIsLoading || transactionsHistoryIsLoading
+  ) {
     return (
       <>
         <div id="top" className={classes.toolbar}/>

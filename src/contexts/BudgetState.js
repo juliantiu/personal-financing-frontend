@@ -14,10 +14,13 @@ export const BudgetContext = createContext(undefined);
 // provider component
 export const BudgetProvider = ({ children }) => {
   const [budget, setBudget] = useState(undefined);
+  const [budgetIsLoading, setBudgetIsLoading] = useState(false);
+  const [budgetError, setBudgetError] = useState(false);
 
     // START actions
     const getBudget = useCallback(
       (uid, month, year) => {
+        setBudgetIsLoading(true);
         return fetch(`${hostname}/${getBudgetURI}/?year=${year}&month=${month}&uid=${uid}`, {
           method: 'GET', 
           mode: 'cors',
@@ -27,11 +30,14 @@ export const BudgetProvider = ({ children }) => {
           return response.json();
         }).then((data) => {
           setBudget(data);
+          setBudgetIsLoading(false);
         }).catch(error => {
+          setBudgetError(true);
+          setBudgetIsLoading(false);
           console.warn('Failed to get budget:', error);
         });
       },
-      [setBudget]
+      [setBudget, setBudgetIsLoading, setBudgetError]
     );
 
     const cloneBudget = useCallback(
@@ -50,6 +56,8 @@ export const BudgetProvider = ({ children }) => {
   return (
     <BudgetContext.Provider value={
       {
+        budgetIsLoading,
+        budgetError,
         budget,
         getBudget,
         setBudget,

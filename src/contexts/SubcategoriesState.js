@@ -22,10 +22,13 @@ export const SubcategoriesContext = createContext(undefined);
 // provider component
 export const SubcategoriesProvider = ({ children }) => {
   const [subcategories, setSubcategories] = useState(undefined);
+  const [subcategoriesIsLoading, setSubcategoriesIsLoading] = useState(false);
+  const [subcategoriesError, setSubcategoriesError] = useState(false);
 
   // START actions
   const getSubcategories = useCallback(
     (categories) => {
+      setSubcategoriesIsLoading(true);
       return fetch(`${hostname}/${getSubcategoriesURI}`, {
         method: 'POST', 
         mode: 'cors',
@@ -41,11 +44,14 @@ export const SubcategoriesProvider = ({ children }) => {
         return resp.json(); 
       }).then(data => {
         setSubcategories(data);
+        setSubcategoriesIsLoading(false);
       }).catch(error => {
+        setSubcategoriesIsLoading(false);
+        setSubcategoriesError(true);
         console.warn('Failed to get subcategories:', error);
       });
     },
-    [setSubcategories]
+    [setSubcategories, setSubcategoriesIsLoading, setSubcategoriesError]
   );
 
   function addSubcategory(rowData, newData) {
@@ -97,11 +103,13 @@ export const SubcategoriesProvider = ({ children }) => {
   return (
     <SubcategoriesContext.Provider value={
       {
+        subcategoriesIsLoading,
+        subcategoriesError,
+        subcategories,
         getSubcategories,
         addSubcategory,
         updateSubcategory,
         deleteSubcategory,
-        subcategories,
         setSubcategories
       }
     }>

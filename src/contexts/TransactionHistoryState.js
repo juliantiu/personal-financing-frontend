@@ -48,10 +48,13 @@ export const TransactionHistoryProvider = ({ children }) => {
   // is within the <ContentWindow /> component?
   // const { currentUser } = useContext(AuthContext);
   const [transactionsHistory, setTransactionsHistory] = useState(undefined);
+  const [transactionsHistoryIsLoading, setTransactionsHistoryIsLoading] = useState(false);
+  const [transactionsHistoryError, setTransactionsHistoryError] = useState(false);
 
     // START actions
     const getTransactions = useCallback(
       (uid, month, year) => {
+        setTransactionsHistoryIsLoading(true);
         fetch(`${hostname}/${getTransactionsURI}/?year=${year}&month=${month}&uid=${uid}`, {
           method: 'GET', 
           mode: 'cors',
@@ -63,12 +66,15 @@ export const TransactionHistoryProvider = ({ children }) => {
         })
         .then((data) => {
           setTransactionsHistory(data);
+          setTransactionsHistoryIsLoading(false);
         })
         .catch(error => {
+          setTransactionsHistoryIsLoading(false);
+          setTransactionsHistoryError(true);
           console.warn('Failed to get transaction history:', error);
         });
       },
-      [setTransactionsHistory]
+      [setTransactionsHistory, setTransactionsHistoryIsLoading, setTransactionsHistoryError]
     );
 
     function addTransaction(newData, currentUser, month, year) {
@@ -125,6 +131,8 @@ export const TransactionHistoryProvider = ({ children }) => {
   return (
     <TransactionHistoryContext.Provider value={
       {
+        transactionsHistoryIsLoading,
+        transactionsHistoryError,
         transactionsHistory,
         getTransactions,
         addTransaction,
