@@ -46,9 +46,9 @@ export const SubcategoriesProvider = ({ children }) => {
         setSubcategories(data);
         setSubcategoriesIsLoading(false);
       }).catch(error => {
+        console.warn('Failed to get subcategories:', error);
         setSubcategoriesIsLoading(false);
         setSubcategoriesError(true);
-        console.warn('Failed to get subcategories:', error);
       });
     },
     [setSubcategories, setSubcategoriesIsLoading, setSubcategoriesError]

@@ -69,9 +69,9 @@ export const TransactionHistoryProvider = ({ children }) => {
           setTransactionsHistoryIsLoading(false);
         })
         .catch(error => {
+          console.warn('Failed to get transaction history:', error);
           setTransactionsHistoryIsLoading(false);
           setTransactionsHistoryError(true);
-          console.warn('Failed to get transaction history:', error);
         });
       },
       [setTransactionsHistory, setTransactionsHistoryIsLoading, setTransactionsHistoryError]

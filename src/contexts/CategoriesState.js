@@ -22,7 +22,7 @@ export const CategoriesContext = createContext(undefined);
 export const CategoriesProvider = ({ children }) => {
   const [categories, setCategories] = useState(undefined);
   const [categoriesIsLoading, setCategoriesIsLoading] = useState(false);
-  const [categoriesError, setCategoriesError] = useState(true);
+  const [categoriesError, setCategoriesError] = useState(false);
 
     // START actions
     const addCategory = useCallback(
@@ -60,9 +60,9 @@ export const CategoriesProvider = ({ children }) => {
           setCategories(data);
           setCategoriesIsLoading(false);
         }).catch(error => {
+          console.warn('Failed to get categories:', error);
           setCategoriesIsLoading(false);
           setCategoriesError(true);
-          console.warn('Failed to get categories:', error);
         });
       },
       [setCategories, setCategoriesIsLoading, setCategoriesError]

@@ -13,11 +13,13 @@ import { AuthContext } from '../../../../contexts/AuthState';
 import DetailPanel from './DetailPanel';
 
 const options = {
-  paging: false,
+  addRowPosition: "first",
+  paging: true,
+  pageSize: 8,
+  draggable: false,
+  pageSizeOptions: [8, 16, 32],
   search: true,
   showTitle: false,
-  minBodyHeight: 500,
-  maxBodyHeight: 500,
   rowStyle: (_, index) => {
     return index % 2 !== 0 ? { backgroundColor: '#EEE' } : { backgroundColor: 'inherit' }
   }
@@ -150,6 +152,14 @@ export default function TransactionHistory(props) {
     deleteTransaction,
   } = useContext(TransactionHistoryContext);
 
+  const data = useMemo(
+    () => {
+      if (transactionsHistory === undefined) return [];
+      return transactionsHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+    },
+    [transactionsHistory]
+  );
+
   const columns = useMemo(
     () => {
       const categoryLookup = categories.reduce(
@@ -193,7 +203,7 @@ export default function TransactionHistory(props) {
           )
         },
         { title: 'Cost', field: 'cost', type: 'numeric' },
-        { title: 'Date', field: 'date', type: 'date', defaultSort: 'asc' }
+        { title: 'Date', field: 'date', type: 'date' }
       ];
 
       return columnsWithCustomEdit;
@@ -204,7 +214,7 @@ export default function TransactionHistory(props) {
   return (
     <div className="tables-container">
       <MaterialTable
-        data={transactionsHistory}
+        data={data}
         columns={columns}
         options={options}
         isLoading={isLoading}

@@ -32,9 +32,9 @@ export const BudgetProvider = ({ children }) => {
           setBudget(data);
           setBudgetIsLoading(false);
         }).catch(error => {
+          console.warn('Failed to get budget:', error);
           setBudgetError(true);
           setBudgetIsLoading(false);
-          console.warn('Failed to get budget:', error);
         });
       },
       [setBudget, setBudgetIsLoading, setBudgetError]
