@@ -9,17 +9,6 @@ import { AuthContext } from '../../../../contexts/AuthState';
 
 import DetailPanel from './DetailPanel';
 
-const options = {
-  paging: false,
-  search: false,
-  showTitle: true,
-  minBodyHeight: 300,
-  maxBodyHeight: 300,
-  rowStyle: (_, index) => {
-    return index % 2 !== 0 ? { backgroundColor: '#EEE' } : { backgroundColor: 'inherit' }
-  }
-}
-
 const columns = [
   { title: 'Subcategory', field: 'subcategory_name' },
   { title: 'Allotment', field: 'allotment', type: 'numeric', defaultSort: 'desc' },
@@ -102,7 +91,7 @@ export default function Budget(props) {
   const { budget, getBudget } = useContext(BudgetContext);
   const { categories } = useContext(CategoriesContext);
   const { getSubcategories, addSubcategory, updateSubcategory, deleteSubcategory } = useContext(SubcategoriesContext);
-  const { getTransactions } = useContext(TransactionHistoryContext);
+  const { getTransactions, transactionsHistory } = useContext(TransactionHistoryContext);
 
   const tables = useMemo(
     () => {
@@ -113,6 +102,30 @@ export default function Budget(props) {
         },
         new Map()
       );
+
+      const budgetSpendingTotals = transactionsHistory.reduce(
+        (lookup, transac) => {
+          return lookup.set(transac.subcategory_id,
+            (lookup.get(transac.subcategory_id) ?? 0) + transac.cost
+          );
+        },
+        new Map()
+      );
+
+      const options = {
+        paging: false,
+        search: false,
+        showTitle: true,
+        minBodyHeight: 300,
+        maxBodyHeight: 300,
+        rowStyle: (rowData, index) => {
+          return rowData.allotment < budgetSpendingTotals.get(rowData.id) ?
+          { backgroundColor: 'lightcoral' } :
+            index % 2 !== 0 ? 
+              { backgroundColor: '#EEE' } :
+              { backgroundColor: 'inherit' }
+        }
+      }
 
       const sortedBudget = budget.sort((a, b) => { 
         const nameA = categoryLookup.get(a.category);
@@ -159,6 +172,7 @@ export default function Budget(props) {
         ))
       );
     }, [
+      transactionsHistory,
       categories, 
       budget, 
       addSubcategory, 
