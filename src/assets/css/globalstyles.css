@@ -295,6 +295,23 @@ button:focus {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.transaction-limit-flip-side {
+  display: none;
+}
+
+.chart-container:hover .transaction-limit-flip-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: RGB(0, 0, 0, .9);
+  color: #FFF;
 }
 
 @media only screen and (max-width: 768px) {

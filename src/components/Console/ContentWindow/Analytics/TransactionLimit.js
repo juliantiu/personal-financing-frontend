@@ -30,12 +30,19 @@ export default function TransactionLimit(props) {
     [transactionsHistory]
   );
 
+  const [threshold, subThreshold, limit] = useMemo(
+    () => {
+      const th = calculateThreshold(budget);
+      const sth = th - (th * .20);
+      const lim = (+(th + (th * .10))).toFixed(2);
+
+      return [th, sth, lim]
+    },
+    [budget]
+  );
+
   const transactionLimitOptions = useMemo(
     () => {
-      const threshold = calculateThreshold(budget);
-      const subThreshold = threshold - (threshold * .20);
-      const limit = (+(threshold + (threshold * .10))).toFixed(2);
-
       if (threshold === 0) return { height: 300 };
 
       return {
@@ -55,7 +62,7 @@ export default function TransactionLimit(props) {
         chartArea: { top: 0, right: 0, bottom: 30, left: 0 }
       };
     },
-    [budget]
+    [threshold, subThreshold, limit]
   );
 
   return (
@@ -66,6 +73,15 @@ export default function TransactionLimit(props) {
         options={transactionLimitData.length > 1 ? transactionLimitOptions : { }}
         loader={<div>Loading Transaction Limit...</div>}
       />
+      <div className="transaction-limit-flip-side">
+        {/* transactionLimitData is structured as [['Label', 'Value'], ['Transactions', transactionLimit]].
+            Therefore to get the value, transactionLimitData[1][1]
+        */}
+        <h3>Spent: {transactionLimitData[1][1].toFixed(2)}</h3>
+        <h4>Green up to: {subThreshold.toFixed(2)}</h4>
+        <h4>Orange up to: {threshold.toFixed(2)}</h4>
+        <h4>Red up to: {limit}</h4>
+      </div>
     </div>
   );
 }
