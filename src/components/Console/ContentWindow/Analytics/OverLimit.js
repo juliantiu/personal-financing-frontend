@@ -34,8 +34,8 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage, sor
   for (const category of budget) {
     for (const subcategory of category.subcategories) {
       max = Math.max(max, subcategory.allotment);
-      budgetSubcategoriesLookup.set(subcategory.subcategory_name, subcategory.allotment);
-      transacSubcategoriesLookup.set(subcategory.subcategory_name, 0);
+      budgetSubcategoriesLookup.set(subcategory.id, subcategory.allotment);
+      transacSubcategoriesLookup.set(subcategory.id, 0);
     }
   }
   
@@ -49,7 +49,7 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage, sor
       budgetSubcategoriesLookup = new Map([...budgetSubcategoriesLookup].sort((a, b) => a[1] > b[1] ? 1 : -1));
       break;
     default:
-      budgetSubcategoriesLookup = new Map([...budgetSubcategoriesLookup].sort((a, b) => a[0] > b[0] ? 1 : -1));
+      budgetSubcategoriesLookup = new Map([...budgetSubcategoriesLookup].sort((a, b) => subcategoriesLookupTable.get(a[0]) > subcategoriesLookupTable.get(b[0]) ? 1 : -1));
       break;
   }
 
@@ -62,7 +62,7 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage, sor
     for (const transaction of filteredTransactions) {
       spent += transaction.cost
     }
-    transacSubcategoriesLookup.set(subcategoriesLookupTable.get(subcategory), spent);
+    transacSubcategoriesLookup.set(subcategory, spent);
   }
 
   const overLimit = [['Subcategory', 'Allotment', 'Spent']];
@@ -70,7 +70,7 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage, sor
   if (selectedPercentage > 1) {
     for (const [key, value] of budgetSubcategoriesLookup) {
       if (value > (max * (selectedPercentage / 100))) {
-        overLimit.push([key, value, transacSubcategoriesLookup.get(key)]);
+        overLimit.push([subcategoriesLookupTable.get(key), value, transacSubcategoriesLookup.get(key)]);
       }
     }
 
@@ -79,7 +79,7 @@ function generateOverLimits(budget, transactionsHistory, selectedPercentage, sor
 
   for (const [key, value] of budgetSubcategoriesLookup) {
     if (value <= (max * selectedPercentage)) {
-      overLimit.push([key, value, transacSubcategoriesLookup.get(key)]);
+      overLimit.push([subcategoriesLookupTable.get(key), value, transacSubcategoriesLookup.get(key)]);
     }
   }
 
