@@ -67,7 +67,8 @@ export default function Budget(props) {
         rowStyle: (rowData, index) => {
           if (rowData.allotment < budgetSpendingTotals.get(rowData.id)) {
             return { backgroundColor: 'lightcoral' };
-          } else if (budgetSpendingTotals.get(rowData.id) === 0) {
+          } else if (!budgetSpendingTotals.get(rowData.id)) {
+            // when in here, meaning spending for this subcategory is === 0
             return { backgroundColor: 'wheat' };
           } 
           return index % 2
