@@ -30,7 +30,7 @@ export default function DetailPanel(props){
     updatedTransaction.then(() => {
       getBudget(currentUser.uid, month, year);
       getTransactions(currentUser.uid, month, year);
-      getSubcategories(categoriesList);
+      // getSubcategories(categoriesList);
       setIsLoading(false);
     }).catch(error => {
       alert('Failed to update transaction', error);

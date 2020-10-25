@@ -1,13 +1,14 @@
 import React, { useContext, useMemo } from 'react';
 import MaterialTable from 'material-table';
 
-import { BudgetContext } from '../../../../contexts/BudgetState';
 import { CategoriesContext } from '../../../../contexts/CategoriesState';
 import { SubcategoriesContext } from '../../../../contexts/SubcategoriesState';
 import { TransactionHistoryContext } from '../../../../contexts/TransactionHistoryState';
 import { AuthContext } from '../../../../contexts/AuthState';
 
 import DetailPanel from './DetailPanel';
+
+const materialTableStyle = { marginTop: 10 };
 
 const columns = [
   { title: 'Subcategory', field: 'subcategory_name' },
@@ -20,62 +21,19 @@ function editable(
   addSubcategory,
   updateSubcategory,
   deleteSubcategory,
-  getBudget,
-  getTransactions,
-  getSubcategories,
   currentUser,
   month,
-  year,
-  categoriesList) {
+  year) {
   return {
-    onRowAdd: newData => new Promise((resolve, reject) => {
-      const newSubcategory = addSubcategory(rowData, newData, currentUser.uid, month, year);
-      newSubcategory.then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        getSubcategories(categoriesList);
-        getTransactions(currentUser.uid, month, year);
-        getBudget(currentUser.uid, month, year);
-        resolve(data);
-      })
-      .catch(error => {
-        alert('Failed to add subcategory');
-        reject(error);
-      });
-    }),
-    onRowUpdate: (newData, oldData) => new Promise((resolve,reject) => {
-      const updatedSubcategory = updateSubcategory(rowData, newData, oldData);
-      updatedSubcategory.then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        getSubcategories(categoriesList);
-        getTransactions(currentUser.uid, month, year);
-        getBudget(currentUser.uid, month, year);
-        resolve(data);
-      })
-      .catch(error => {
-        alert('Failed to update subcategory');
-        reject(error);
-      });
-    }),
-    onRowDelete: oldData => new Promise((resolve,reject) => {
-      const deletedSubcategory = deleteSubcategory(oldData);
-      deletedSubcategory.then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        getSubcategories(categoriesList);
-        getTransactions(currentUser.uid, month, year);
-        getBudget(currentUser.uid, month, year);
-        resolve(data);
-      })
-      .catch(error => {
-        alert('Failed to delete subcategory');
-        reject(error);
-      });
-    })
+    onRowAdd: async (newData) => {
+      addSubcategory(rowData, newData, currentUser.uid, month, year);
+    },
+    onRowUpdate: async (newData, oldData) => {
+      updateSubcategory(rowData, newData, oldData);
+    },
+    onRowDelete: async (oldData) => {
+      deleteSubcategory(oldData);
+    }
   }
 }
 
@@ -88,21 +46,12 @@ function detailPanel(rowData) {
 export default function Budget(props) {
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
-  const { budget, getBudget } = useContext(BudgetContext);
   const { categories } = useContext(CategoriesContext);
-  const { getSubcategories, addSubcategory, updateSubcategory, deleteSubcategory } = useContext(SubcategoriesContext);
-  const { getTransactions, transactionsHistory } = useContext(TransactionHistoryContext);
+  const { subcategories, addSubcategory, updateSubcategory, deleteSubcategory } = useContext(SubcategoriesContext);
+  const { transactionsHistory } = useContext(TransactionHistoryContext);
 
-  const tables = useMemo(
+  const options = useMemo(
     () => {
-      const categoryLookup = categories.reduce(
-        (lookup, category) => {
-          lookup.set(category.id, category.category_name)
-          return lookup;
-        },
-        new Map()
-      );
-
       const budgetSpendingTotals = transactionsHistory.reduce(
         (lookup, transac) => {
           return lookup.set(transac.subcategory_id,
@@ -110,21 +59,59 @@ export default function Budget(props) {
           );
         },
         new Map()
-      );
-
-      const options = {
+      )
+      return {
         paging: false,
         search: false,
         showTitle: true,
-        minBodyHeight: 300,
-        maxBodyHeight: 300,
         rowStyle: (rowData, index) => {
-          return rowData.allotment < budgetSpendingTotals.get(rowData.id) ?
-          { backgroundColor: 'lightcoral' } :
-            index % 2 !== 0 ? 
-              { backgroundColor: '#EEE' } :
-              { backgroundColor: 'inherit' }
+          if (rowData.allotment < budgetSpendingTotals.get(rowData.id)) {
+            return { backgroundColor: 'lightcoral' };
+          } else if (budgetSpendingTotals.get(rowData.id) === 0) {
+            return { backgroundColor: 'wheat' };
+          } 
+          return index % 2
+            ? { backgroundColor: '#EEE' }
+            : { backgroundColor: 'inherit' }
         }
+      }
+    },
+    [transactionsHistory]
+  );
+
+  const categoryLookup = useMemo(
+    () => categories.reduce(
+      (lookup, category) => {
+        lookup.set(category.id, category.category_name)
+        return lookup;
+      },
+      new Map()
+    ),
+    [categories]
+  );
+
+  const tables = useMemo(
+    () => {
+      const budget = [];
+      const budgetItems = {};
+      for (const subcategory of subcategories) {
+        const { category_id } = subcategory;
+        if (budgetItems.hasOwnProperty(category_id)) {
+          budgetItems[category_id].push(subcategory);
+        } else {
+          budgetItems[category_id] = [subcategory];
+        }
+      }
+
+      for (const category of categories) {
+        if (!budgetItems.hasOwnProperty(category.id)) {
+          budget.push({ category: category.id, subcategories: [] });
+        }
+      }
+
+      for (const budgetItem of Object.entries(budgetItems)) {
+        const [category, subcategories] = budgetItem;
+        budget.push({ category, subcategories });
       }
 
       const sortedBudget = budget.sort((a, b) => { 
@@ -142,8 +129,6 @@ export default function Budget(props) {
         return 0;
       });
       
-      const categoriesList = categories.map(category => category.id);
-
       return (
         sortedBudget.map(budgetItem => (
           <MaterialTable
@@ -155,35 +140,30 @@ export default function Budget(props) {
             detailPanel={detailPanel}
             editable={
               editable(
-                budgetItem, 
+                budgetItem,
                 addSubcategory, 
                 updateSubcategory,
                 deleteSubcategory,
-                getBudget, 
-                getTransactions,
-                getSubcategories,
                 currentUser, 
                 month, 
-                year,
-                categoriesList
+                year
               )
             }
+            style={materialTableStyle}
           />
         ))
       );
     }, [
-      transactionsHistory,
-      categories, 
-      budget, 
-      addSubcategory, 
-      updateSubcategory, 
+      categories,
+      subcategories,
+      addSubcategory,
+      categoryLookup,
+      options,
+      currentUser,
       deleteSubcategory,
-      getBudget, 
-      getTransactions,
-      getSubcategories,
-      currentUser, 
-      month, 
+      month,
       year,
+      updateSubcategory
     ]
   );
 

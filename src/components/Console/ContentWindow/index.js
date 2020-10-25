@@ -89,7 +89,7 @@ export default function ContentWindow(props) {
     <>
       <div id="top" className={classes.toolbar}/>
       <Grid container className={classes.contentWindowContainer}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant="h2" gutterBottom>Analytics</Typography>
           <Analytics 
             month={month}
@@ -104,7 +104,7 @@ export default function ContentWindow(props) {
             year={year}
           />
           <hr />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Typography variant="h2" gutterBottom>Budget Tables</Typography>
           <Budget 

@@ -54,50 +54,101 @@ export const SubcategoriesProvider = ({ children }) => {
     [setSubcategories, setSubcategoriesIsLoading, setSubcategoriesError]
   );
 
-  function addSubcategory(rowData, newData) {
-    return fetch(newSubcategoryURL, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials:'same-origin',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        category_id: rowData.category,
-        subcategory_name: newData.subcategory_name,
-        allotment: newData.allotment,
-        description: newData.description
+  const addSubcategory = useCallback(
+    (rowData, newData) => {
+      fetch(newSubcategoryURL, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials:'same-origin',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          category_id: rowData.category,
+          subcategory_name: newData.subcategory_name,
+          allotment: newData.allotment,
+          description: newData.description
+        })
       })
-    });
-  }
+      .then(response => response.json())
+      .then(data => setSubcategories(prev => {
+        const prevCopy = [...prev];
+        prevCopy.push({ 
+          id: data.id,
+          category_id: rowData.category,
+          subcategory_name: newData.subcategory_name,
+          allotment: newData.allotment,
+          description: newData.description
+        });
+        return prevCopy;
+      }))
+      .catch(error => {
+        alert('Failed to add subcategory');
+        console.error(error);
+      });
+    },
+    [setSubcategories]
+  );
 
-  function updateSubcategory(rowData, newData, oldData) {
-    return fetch((updateSubcategoryURL + `/${oldData.id}`), {
-      method: 'PUT',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials:'same-origin',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        category_id: rowData.category,
-        subcategory_name: newData.subcategory_name,
-        allotment: newData.allotment,
-        description: newData.description
+  const updateSubcategory = useCallback(
+    (rowData, newData, oldData) => {
+      fetch((updateSubcategoryURL + `/${oldData.id}`), {
+        method: 'PUT',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials:'same-origin',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          category_id: rowData.category,
+          subcategory_name: newData.subcategory_name,
+          allotment: newData.allotment,
+          description: newData.description
+        })
       })
-    });
-  }
+      .then(() => {
+        setSubcategories(prev => {
+          const prevCopy = [ ...prev ];
+          const indexOfSubcategory = prevCopy.findIndex(subcategory => subcategory.id === oldData.id);
+          const updatedSubcategory = {
+            id: oldData.id,
+            category_id: rowData.category,
+            subcategory_name: newData.subcategory_name,
+            allotment: newData.allotment,
+            description: newData.description
+          }
+          prevCopy[indexOfSubcategory] = updatedSubcategory;
+          return prevCopy;
+        });
+      })
+      .catch(error => {
+        alert('Failed to update subcategory');
+        console.error(error);
+      })
+    },
+    [setSubcategories]
+  );
 
-  function deleteSubcategory(oldData) {
-    return fetch((deleteSubcategoryURL + `/${oldData.id}`), {
-      method: 'delete',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials:'same-origin',
-    });
-  }
+  const deleteSubcategory = useCallback(
+    (oldData) => {
+      fetch((deleteSubcategoryURL + `/${oldData.id}`), {
+        method: 'delete',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials:'same-origin',
+      })
+      .then(() => {
+        setSubcategories(prev => prev.filter(subcategory => subcategory.id !== oldData.id));
+      })
+      .catch(error => {
+        alert('Failed to delete subcategory');
+        console.error(error);
+      });
+    },
+    [setSubcategories]
+  )
   // END actions
 
   return (
