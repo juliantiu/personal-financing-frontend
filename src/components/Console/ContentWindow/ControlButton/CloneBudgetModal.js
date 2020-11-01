@@ -11,13 +11,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { BudgetContext } from '../../../../contexts/BudgetState';
 import { CategoriesContext } from '../../../../contexts/CategoriesState';
-import { TransactionHistoryContext } from '../../../../contexts/TransactionHistoryState';
 
 export default function CloneBudget(props) {
   const { month, year, currentUser } = props
-  const { getBudget, cloneBudget } = useContext(BudgetContext);
+  const { cloneBudget } = useContext(BudgetContext);
   const { getCategories } = useContext(CategoriesContext);
-  const { getTransactions } = useContext(TransactionHistoryContext);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -34,16 +32,8 @@ export default function CloneBudget(props) {
     const clonedBudget = cloneBudget(currentUser.uid, month, year);
     clonedBudget.then(() => {
       setIsLoading(false);
-      // giving time for google database to update before fetching new data
-      setTimeout(
-        () => {
-          setOpen(false);
-          getCategories(currentUser.uid, month, year);
-          getBudget(currentUser.uid, month, year);
-          getTransactions(currentUser.uid, month, year);
-        },
-        1000
-      );
+      setOpen(false);
+      getCategories(currentUser.uid, month, year);
     }).catch(error => {
       setIsLoading(false);
       alert('Failed to delete budget category', error);
