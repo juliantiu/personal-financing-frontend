@@ -77,55 +77,109 @@ export const TransactionHistoryProvider = ({ children }) => {
       [setTransactionsHistory, setTransactionsHistoryIsLoading, setTransactionsHistoryError]
     );
 
-    function addTransaction(newData, currentUser, month, year) {
-      return fetch(newTransactionURL, {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: currentUser.uid,
-          cost: newData.cost,
-          subcategory_id: newData.subcategory_id,
-          date: newData.date,
-          month,
-          year
+    const addTransaction = useCallback(
+        (newData, currentUser, month, year) => {
+        return fetch(newTransactionURL, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: currentUser.uid,
+            cost: newData.cost,
+            subcategory_id: newData.subcategory_id,
+            date: newData.date,
+            month,
+            year
+          })
         })
-      })
-    }
+        .then(response => response.json())
+        .then(data => setTransactionsHistory(prev => {
+          const prevCopy = [...prev];
+          prevCopy.push({
+            id: data.id,
+            uid: currentUser.uid,
+            cost: newData.cost,
+            category_id: newData.category_id,
+            subcategory_id: newData.subcategory_id,
+            date: newData.date,
+            month,
+            year
+          });
+          return prevCopy;
+        }))
+        .catch(() => alert('Failed to add new transaction'))
+      },
+      [setTransactionsHistory]
+    );
 
-    function updateTransaction(oldData, newData, currentUser, month, year) {
-      return fetch((`${updateTransactionURL}/${oldData.id}`), {
-        method: 'PUT',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: currentUser.uid,
-          cost: newData.cost,
-          subcategory_id: newData.subcategory_id,
-          description: newData.description,
-          date: newData.date,
-          month,
-          year
+    const updateTransaction = useCallback(
+      (oldData, newData, currentUser, month, year, callback) => {
+        fetch((`${updateTransactionURL}/${oldData.id}`), {
+          method: 'PUT',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: currentUser.uid,
+            cost: newData.cost,
+            subcategory_id: newData.subcategory_id,
+            description: newData.description,
+            date: newData.date,
+            month,
+            year
+          })
         })
-      })
-    }
+        .then(() => {
+          if (callback) {
+            callback();
+          }
+          setTransactionsHistory(
+            prev => {
+              const prevCopy = [...prev];
+              const indexOfTransaction = prevCopy.findIndex(transac => transac.id === oldData.id);
+              const updatedTransaction = {
+                id: oldData.id,
+                uid: currentUser.uid,
+                cost: newData.cost,
+                category_id: newData.category_id ?? oldData.category_id,
+                subcategory_id: newData.subcategory_id,
+                description: newData.description,
+                date: newData.date,
+                month,
+                year
+              }
+              prevCopy[indexOfTransaction] = updatedTransaction;
+              return prevCopy;
+            }
+          );
+        })
+        .catch(() => alert('Failed to update transaction details'))
+      },
+      [setTransactionsHistory]
+    );
 
-    function deleteTransaction(oldData, month, year) {
-      return fetch((deleteTransactionURL + `/${oldData.id}`), {
-        method: 'DELETE',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials:'same-origin',
-      })
-    }
+    const deleteTransaction = useCallback(
+      (oldData) => {
+        fetch((deleteTransactionURL + `/${oldData.id}`), {
+          method: 'DELETE',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+        })
+        .then(() => {
+          setTransactionsHistory(prev => prev.filter(transac => transac.id !== oldData.id));
+        })
+        .catch(_ => alert('Failed to delete transaction'))
+      },
+      [setTransactionsHistory]
+    );
     // END actions
 
   return (

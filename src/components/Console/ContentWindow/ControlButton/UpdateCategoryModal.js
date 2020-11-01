@@ -12,15 +12,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import { BudgetContext } from '../../../../contexts/BudgetState';
 import { CategoriesContext } from '../../../../contexts/CategoriesState';
-import { TransactionHistoryContext } from '../../../../contexts/TransactionHistoryState';
 
 export default function BudgetModal(props) {
   const { currentUser, month, year } = props
-  const { categories, updateCategory, getCategories } = useContext(CategoriesContext);
-  const { getBudget } = useContext(BudgetContext);
-  const { getTransactions } = useContext(TransactionHistoryContext);
+  const { categories, updateCategory } = useContext(CategoriesContext);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [categoryId, setCategoryId] = useState(''); // For the select input
@@ -58,26 +54,19 @@ export default function BudgetModal(props) {
   };
 
   const handleSubmit = () => {
-    setIsLoading(true);
-    const updatedCategory = updateCategory(
-      currentUser.uid, 
-      categoryId, newCategoryName, 
-      month, year
-    );
-    updatedCategory.then(() => {
+    const cb = () => {
       setIsLoading(false);
       setOpen(false);
       setCategoryId('');
       setNewCategoryName('');
-      getCategories(currentUser.uid, month, year);
-      getBudget(currentUser.uid, month, year);
-      getTransactions(currentUser.uid, month, year);
-    }).catch(error => {
-      setNewCategoryName('');
-      setCategoryId('');
-      setIsLoading(false);
-      alert('Failed to delete budget category', error);
-    })
+    }
+    setIsLoading(true);
+    updateCategory(
+      currentUser.uid, 
+      categoryId, newCategoryName, 
+      month, year,
+      cb
+    );
   }
 
   return (

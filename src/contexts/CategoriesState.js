@@ -25,27 +25,6 @@ export const CategoriesProvider = ({ children }) => {
   const [categoriesError, setCategoriesError] = useState(false);
 
     // START actions
-    const addCategory = useCallback(
-      (currentUser, categoryName, month, year) => {
-        return fetch(newCategoryURL, {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          credentials:'same-origin',
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            uid: currentUser.uid,
-            category_name: categoryName,
-            month: month,
-            year: year
-          })
-        });
-      },
-      []
-    );
-
     const getCategories = useCallback(
       (uid, month, year) => {
         setCategoriesIsLoading(true);
@@ -68,8 +47,49 @@ export const CategoriesProvider = ({ children }) => {
       [setCategories, setCategoriesIsLoading, setCategoriesError]
     );
 
+    const addCategory = useCallback(
+      (currentUser, categoryName, month, year, callback) => {
+        fetch(newCategoryURL, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials:'same-origin',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: currentUser.uid,
+            category_name: categoryName,
+            month: month,
+            year: year
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          callback();
+          setCategories(prev => {
+            const prevCopy = [...prev];
+            prevCopy.push({
+              id: data.id,
+              uid: currentUser.uid,
+              category_name: categoryName,
+              month: month,
+              year: year
+            });
+            return prevCopy;
+          });
+        })
+        .catch((error) => {
+          alert('Failed to add new category');
+          console.warn(error);
+          callback();
+        })
+      },
+      [setCategories]
+    );
+
     const updateCategory = useCallback(
-      (uid, categoryId, newCategoryName, month, year) => {
+      (uid, categoryId, newCategoryName, month, year, callback) => {
         return fetch((updateCategoryURL + `/${categoryId}`), {
           method: 'PUT',
           mode: 'cors',
@@ -84,21 +104,52 @@ export const CategoriesProvider = ({ children }) => {
             uid,
             category_name: newCategoryName,
           })
+        })
+        .then(() => {
+          callback();
+          setCategories(prev => {
+            const prevCopy = [...prev];
+            const indexOfCategory= prevCopy.findIndex(category => category.id === categoryId);
+            const updatedCategory = {
+              id: categoryId,
+              month,
+              year,
+              uid,
+              category_name: newCategoryName
+            };
+            prevCopy[indexOfCategory] = updatedCategory;
+            return prevCopy;
+          });
+        })
+        .catch(() => {
+          alert('Failed to update category');
+          callback();
         });
       },
-      []
+      [setCategories]
     );
 
     const deleteCategory = useCallback(
-      (categoryId) => {
-        return fetch((deleteCategoryURL + `/${categoryId}`), {
+      (categoryId, callback) => {
+        fetch((deleteCategoryURL + `/${categoryId}`), {
           method: 'delete',
           mode: 'cors',
           cache: 'no-cache',
           credentials:'same-origin',
         })
+        .then(() => {
+          callback();
+          setCategories(prev => {
+            const prevCopy = [...prev];
+            return prevCopy.filter(category => category.id !== categoryId);
+          });
+        })
+        .catch(() => {
+          alert('Failed to delete category');
+          callback();
+        })
       },
-      []
+      [setCategories]
     );
     // END actions
 

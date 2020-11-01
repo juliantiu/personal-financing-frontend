@@ -4,7 +4,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { BudgetContext } from '../../../../contexts/BudgetState';
 import { CategoriesContext } from '../../../../contexts/CategoriesState';
 import { SubcategoriesContext } from '../../../../contexts/SubcategoriesState';
 import { TransactionHistoryContext } from '../../../../contexts/TransactionHistoryState';
@@ -68,8 +67,6 @@ function SubcategoryEditComponent(props) {
 }
 
 function editable(
-  getBudget, 
-  getTransactions, 
   addTransaction, 
   updateTransaction, 
   deleteTransaction, 
@@ -77,51 +74,15 @@ function editable(
   month, 
   year) {
   return {
-    onRowAdd: newData => new Promise((resolve, reject) => {
-      const newTransaction = addTransaction(newData, currentUser, month, year);
-      newTransaction.then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        getTransactions(currentUser.uid, month, year);
-        getBudget(currentUser.uid, month, year);
-        resolve(data);
-      })
-      .catch(error => {
-        alert('Failed to process transaction');
-        reject(error);
-      });
-    }),
-    onRowUpdate: (newData, oldData) => new Promise((resolve,reject) => {
-      const updatedTransaction = updateTransaction(oldData, newData, currentUser, month, year);
-      updatedTransaction.then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        getTransactions(currentUser.uid, month, year);
-        getBudget(currentUser.uid, month, year);
-        resolve(data);
-      })
-      .catch(error => {
-        alert('Failed to update transaction');
-        reject(error);
-      });
-    }),
-    onRowDelete: oldData => new Promise((resolve,reject) => {
-      const deletedTransaction= deleteTransaction(oldData);
-      deletedTransaction.then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        getTransactions(currentUser.uid, month, year);
-        getBudget(currentUser.uid, month, year);
-        resolve(data);
-      })
-      .catch(error => {
-        alert('Failed to delete transaction');
-        reject(error);
-      });
-    })
+    onRowAdd: async (newData) => {
+      addTransaction(newData, currentUser, month, year);
+    },
+    onRowUpdate: async (newData, oldData) => {
+      updateTransaction(oldData, newData, currentUser, month, year);
+    },
+    onRowDelete: async (oldData) => {
+      deleteTransaction(oldData);
+    }
   }
 }
 
@@ -141,16 +102,9 @@ export default function TransactionHistory(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
-  const { getBudget } = useContext(BudgetContext);
   const { categories } = useContext(CategoriesContext);
   const { subcategories } = useContext(SubcategoriesContext);
-  const { 
-    transactionsHistory,
-    getTransactions,
-    addTransaction,
-    updateTransaction,
-    deleteTransaction,
-  } = useContext(TransactionHistoryContext);
+  const { transactionsHistory, addTransaction, updateTransaction, deleteTransaction } = useContext(TransactionHistoryContext);
 
   const data = useMemo(
     () => {
@@ -220,8 +174,6 @@ export default function TransactionHistory(props) {
         isLoading={isLoading}
         detailPanel={rowData => detailPanel(rowData, currentUser, month, year, setIsLoading)}
         editable={editable(
-          getBudget,
-          getTransactions,
           addTransaction,
           updateTransaction,
           deleteTransaction,

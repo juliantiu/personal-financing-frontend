@@ -26,12 +26,12 @@ export default function ContentWindow(props) {
   const { getSubcategories, subcategories, subcategoriesIsLoading, subcategoriesError } = useContext(SubcategoriesContext);
   const { getTransactions, transactionsHistory, transactionsHistoryIsLoading, transactionsHistoryError } = useContext(TransactionHistoryContext);
 
-  useEffect(
-    () => {
-      getBudget(currentUser.uid, month, year);
-    },
-    [getBudget, currentUser, month, year]
-  );
+  // useEffect(
+  //   () => {
+  //     getBudget(currentUser.uid, month, year);
+  //   },
+  //   [getBudget, currentUser, month, year]
+  // );
 
   useEffect(
     () => {
@@ -70,7 +70,7 @@ export default function ContentWindow(props) {
   }
 
   if (
-    budget === undefined || categories === undefined || subcategories === undefined || transactionsHistory === undefined ||
+    categories === undefined || subcategories === undefined || transactionsHistory === undefined ||
     budgetIsLoading || categoriesIsLoading || subcategoriesIsLoading || transactionsHistoryIsLoading
   ) {
     return (
@@ -96,7 +96,7 @@ export default function ContentWindow(props) {
             year={year}
           />
           <hr />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Typography variant="h2" gutterBottom>Transactions</Typography>
           <TransactionHistory 
@@ -104,7 +104,7 @@ export default function ContentWindow(props) {
             year={year}
           />
           <hr />
-        </Grid> */}
+        </Grid>
         <Grid item xs={12}>
           <Typography variant="h2" gutterBottom>Budget Tables</Typography>
           <Budget 
