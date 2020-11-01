@@ -11,7 +11,6 @@ import ControlButton from './ControlButton';
 
 import { AuthContext } from '../../../contexts/AuthState';
 import { TransactionHistoryContext } from '../../../contexts/TransactionHistoryState';
-import { BudgetContext } from '../../../contexts/BudgetState';
 import { CategoriesContext } from '../../../contexts/CategoriesState';
 import { SubcategoriesContext } from '../../../contexts/SubcategoriesState';
 
@@ -21,17 +20,9 @@ export default function ContentWindow(props) {
   const classes = useStyles();
   const { month, year } = props;
   const { currentUser } = useContext(AuthContext);
-  const { getBudget, budget, budgetIsLoading, budgetError } = useContext(BudgetContext);
   const { getCategories, categories, categoriesIsLoading, categoriesError } = useContext(CategoriesContext);
   const { getSubcategories, subcategories, subcategoriesIsLoading, subcategoriesError } = useContext(SubcategoriesContext);
   const { getTransactions, transactionsHistory, transactionsHistoryIsLoading, transactionsHistoryError } = useContext(TransactionHistoryContext);
-
-  // useEffect(
-  //   () => {
-  //     getBudget(currentUser.uid, month, year);
-  //   },
-  //   [getBudget, currentUser, month, year]
-  // );
 
   useEffect(
     () => {
@@ -56,7 +47,7 @@ export default function ContentWindow(props) {
     [getTransactions, currentUser, month, year]
   );
 
-  if (transactionsHistoryError || categoriesError || subcategoriesError || budgetError) {
+  if (transactionsHistoryError || categoriesError || subcategoriesError) {
     return (
       <>
         <div id="top" className={classes.toolbar}/>
@@ -71,7 +62,7 @@ export default function ContentWindow(props) {
 
   if (
     categories === undefined || subcategories === undefined || transactionsHistory === undefined ||
-    budgetIsLoading || categoriesIsLoading || subcategoriesIsLoading || transactionsHistoryIsLoading
+    categoriesIsLoading || subcategoriesIsLoading || transactionsHistoryIsLoading
   ) {
     return (
       <>
@@ -89,14 +80,14 @@ export default function ContentWindow(props) {
     <>
       <div id="top" className={classes.toolbar}/>
       <Grid container className={classes.contentWindowContainer}>
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <Typography variant="h2" gutterBottom>Analytics</Typography>
           <Analytics 
             month={month}
             year={year}
           />
           <hr />
-        </Grid> */}
+        </Grid>
         <Grid item xs={12}>
           <Typography variant="h2" gutterBottom>Transactions</Typography>
           <TransactionHistory 
