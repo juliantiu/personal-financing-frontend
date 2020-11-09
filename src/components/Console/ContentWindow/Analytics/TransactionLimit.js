@@ -30,13 +30,13 @@ export default function TransactionLimit(props) {
     [transactionsHistory]
   );
 
-  const [threshold, subThreshold, limit] = useMemo(
+  const [threshold, subSubThreshold, subThreshold] = useMemo(
     () => {
       const th = calculateThreshold(budget);
-      const sth = th - (th * .20);
-      const lim = (+(th + (th * .10))).toFixed(2);
+      const ssth = th * .75;
+      const sth = th * .90;
 
-      return [th, sth, lim]
+      return [th, ssth, sth]
     },
     [budget]
   );
@@ -47,22 +47,22 @@ export default function TransactionLimit(props) {
 
       return {
         height: 300,
-        redFrom: threshold, 
-        redTo: limit,
-        yellowFrom: subThreshold, 
-        yellowTo: threshold,
+        redFrom: subThreshold, 
+        redTo: threshold,
+        yellowFrom: subSubThreshold, 
+        yellowTo: subThreshold,
         greenFrom: 0,
-        greenTo: subThreshold,
+        greenTo: subSubThreshold,
         minorTicks: 5,
         min: 0,
-        max: limit,
+        max: threshold.toFixed(2),
         greenColor: '#6E8363',
         orangeColor: '#CE9960',
         redColor: '#A34730',
         chartArea: { top: 0, right: 0, bottom: 30, left: 0 }
       };
     },
-    [threshold, subThreshold, limit]
+    [threshold, subThreshold, subSubThreshold]
   );
 
   return (
@@ -78,9 +78,9 @@ export default function TransactionLimit(props) {
             Therefore to get the value, transactionLimitData[1][1]
         */}
         <h3>Spent: {transactionLimitData[1][1].toFixed(2)}</h3>
-        <h4>Green up to: {subThreshold.toFixed(2)}</h4>
-        <h4>Orange up to: {threshold.toFixed(2)}</h4>
-        <h4>Red up to: {limit}</h4>
+        <h4>Green up to: {subSubThreshold.toFixed(2)}</h4>
+        <h4>Orange up to: {subThreshold.toFixed(2)}</h4>
+        <h4>Red up to: {threshold.toFixed(2)}</h4>
       </div>
     </div>
   );

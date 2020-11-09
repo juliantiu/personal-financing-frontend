@@ -78,7 +78,7 @@ export const SubcategoriesProvider = ({ children }) => {
           id: data.id,
           category_id: rowData.category,
           subcategory_name: newData.subcategory_name,
-          allotment: newData.allotment,
+          allotment: +newData?.allotment ?? newData.allotment,
           description: newData.description
         });
         return prevCopy;
@@ -116,7 +116,7 @@ export const SubcategoriesProvider = ({ children }) => {
             id: oldData.id,
             category_id: rowData.category,
             subcategory_name: newData.subcategory_name,
-            allotment: newData.allotment,
+            allotment: +newData?.allotment ?? newData.allotment,
             description: newData.description
           }
           prevCopy[indexOfSubcategory] = updatedSubcategory;

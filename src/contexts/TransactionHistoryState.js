@@ -102,7 +102,7 @@ export const TransactionHistoryProvider = ({ children }) => {
           prevCopy.push({
             id: data.id,
             uid: currentUser.uid,
-            cost: newData.cost,
+            cost: +newData?.cost ?? newData.cost,
             category_id: newData.category_id,
             subcategory_id: newData.subcategory_id,
             date: newData.date,
@@ -128,7 +128,7 @@ export const TransactionHistoryProvider = ({ children }) => {
           },
           body: JSON.stringify({
             uid: currentUser.uid,
-            cost: newData.cost,
+            cost: +newData?.cost ?? newData.cost,
             subcategory_id: newData.subcategory_id,
             description: newData.description,
             date: newData.date,
